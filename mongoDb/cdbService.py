@@ -42,6 +42,7 @@ parser.add_argument('-sd', '--subdetector',
 
 args = parser.parse_args()
 
+
 if args.list_subdetectors:
     list_subdetectors()
 
