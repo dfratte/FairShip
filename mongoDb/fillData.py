@@ -10,33 +10,15 @@ connect(db='cernSimple',
         port=27017
         )
 
-for i in range(1):
+for i in range(1, 100):
     sub = Subdetector(name='subdetector' + i.__str__())
 
-    for c in range(2):
+    for c in range(1, 10):
         c = Condition(name='condition_' + c.__str__(), iov=c, tag='tag_' + c.__str__())
 
-        for j in range(3):
+        for j in range(1, 20):
             seq = random.randint(1, 1000)
             c.parameters.append(Parameter(name='param_' + seq.__str__(), value='value_' + seq.__str__(), iov=seq))
 
         sub.conditions.append(c)
         sub.save()
-
-
-class Parameter(EmbeddedDocument):
-    name = StringField(max_length=1000, null=True)
-    iov = LongField(null=True)
-    value = StringField(max_length=1000, null=True)
-
-
-class Condition(EmbeddedDocument):
-    name = StringField(max_length=1000, null=True)
-    iov = LongField(null=True)
-    tag = StringField(max_length=1000, null=True)
-    parameters = EmbeddedDocumentListField(Parameter)
-
-
-class Subdetector(Document):
-    name = StringField(max_length=1000, null=True)
-    conditions = EmbeddedDocumentListField(Condition)
