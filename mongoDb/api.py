@@ -15,3 +15,6 @@ def list_subdetectors():
 
 def show_subdetector(searched_name):
     return Subdetector.objects(name=searched_name)
+
+def show_subdetector_condition(searched_name):
+    return 0
