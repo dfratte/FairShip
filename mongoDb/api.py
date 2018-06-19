@@ -16,5 +16,11 @@ def list_subdetectors():
 def show_subdetector(searched_name):
     return Subdetector.objects(name=searched_name)
 
-def show_subdetector_condition(searched_name):
-    return 0
+
+def show_subdetector_conditions(searched_name):
+    return show_subdetector(searched_name).values_list('conditions')
+    # return Subdetector.objects(name=searched_name).values_list('conditions')
+
+
+def show_subdetector_condition(searched_name, searched_condition):
+    return Subdetector.objects(name=searched_name).first().conditions.filter(name=searched_condition).first()
