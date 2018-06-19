@@ -3,18 +3,18 @@ import datetime as date
 
 from api import *
 
-
-def valid_date(s):
-    try:
-        return date.datetime.strptime(s, "%Y-%m-%d %H:%M")
-    except ValueError:
-        msg = "Given Datetime ({0}) not valid! Expected format, 'YYYY-MM-DD HH:mm'!".format(s)
-        raise argparse.ArgumentTypeError(msg)
-
-
 help_desc = '''
+
+  #####  ####### ######  #     # 
+ #     # #       #     # ##    # 
+ #       #       #     # # #   # 
+ #       #####   ######  #  #  # 
+ #       #       #   #   #   # # 
+ #     # #       #    #  #    ## 
+  #####  ####### #     # #     # 
+                                 
 Conditions Database Service
-FairSHiP - CERN 2018
+FairSHiP 2018
 
 Developed by Eindhoven University of Technology (ST) under some Open Source License
 
@@ -52,10 +52,11 @@ if flag_sd_c:
 else:
     # call show condition function
     print "To be implemented!"
-    
 
-if args.list_subdetectors:
-    list_subdetectors()
+if args.list_subdetectors is True:
+    subdetectors = list_subdetectors()
+    print subdetectors.to_json()
 
-elif args.subdetector is not None and args.condition is None:
-    show_subdetector(args.subdetector)
+if args.subdetector is not None and args.condition is None:
+    subdetector = show_subdetector(args.subdetector)
+    print subdetector.to_json()

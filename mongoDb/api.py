@@ -10,10 +10,11 @@ connect(db='cernSimple',
 
 
 def list_subdetectors():
-    for sd in Subdetector.objects:
-        print(sd.name)
-    print "Count: ", len(Subdetector.objects())
+    return Subdetector.objects()
 
 
 def show_subdetector(searched_name):
-    print Subdetector.objects(name=searched_name).to_json()
+    return Subdetector.objects(name=searched_name)
+
+def show_subdetector_condition(searched_name):
+    return 0
