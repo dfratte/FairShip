@@ -1,11 +1,20 @@
-from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField
+# from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField
+from mongoengine import *
 
 
 class Parameter(EmbeddedDocument):
-    name = StringField(max_length=100, null=True)
-    value = StringField(max_length=100, null=True)
+    name = StringField(max_length=1000, null=True)
+    iov = LongField(null=True)
+    value = StringField(max_length=1000, null=True)
 
 
-class Subdetector (Document):
-    name = StringField(max_length=100, null=True)
+class Condition(EmbeddedDocument):
+    name = StringField(max_length=1000, null=True)
+    iov = LongField(null=True)
+    tag = StringField(max_length=1000, null=True)
     parameters = EmbeddedDocumentListField(Parameter)
+
+
+class Subdetector(Document):
+    name = StringField(max_length=1000, null=True)
+    conditions = EmbeddedDocumentListField(Condition)
