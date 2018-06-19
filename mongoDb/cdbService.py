@@ -45,18 +45,20 @@ args = parser.parse_args()
 
 # flag to check that a subdetector exists when querying for a condition
 # TODO: move this to an array of flags/error msg and analyze it in a separate function
-flag_sd_c = vars(args)['subdetector'] is None and vars(args)['condition'] is not None
+flag_sd_c1      = vars(args)['list_subdetectors'] is True and vars(args)['subdetector'] is not None and vars(args)['condition'] is not None
+flag_sd_c2      = vars(args)['list_subdetectors'] is False and vars(args)['subdetector'] is None and vars(args)['condition'] is not None
 
-if flag_sd_c:
+list_sd_filter  = filter(lambda x: (x != 'list_subdetectors' and vars(args)[x] is not None), vars(args))
+flag_ls         = len(list_sd_filter) != 0 and args.list_subdetectors is True
+
+
+if (flag_sd_c1 or flag_sd_c2 or flag_ls):
     parser.error('arguments error')
-else:
-    # call show condition function
-    print "To be implemented!"
 
 if args.list_subdetectors is True:
     subdetectors = list_subdetectors()
-    print subdetectors.to_json()
+#     print subdetectors.to_json()
 
 if args.subdetector is not None and args.condition is None:
     subdetector = show_subdetector(args.subdetector)
-    print subdetector.to_json()
+#     print subdetector.to_json()
