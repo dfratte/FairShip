@@ -62,3 +62,7 @@ if args.list_subdetectors is True:
 if args.subdetector is not None and args.condition is None:
     subdetector = show_subdetector(args.subdetector)
 #     print subdetector.to_json()
+
+if args.subdetector is not None and args.condition is not None:
+    condition = show_subdetector_condition(args.subdetector, args.condition)
+#     print condition.to_json()
