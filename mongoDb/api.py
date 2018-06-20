@@ -16,9 +16,9 @@ class API:
         return Subdetector.objects(name=searched_name).first()
 
     def show_subdetector_conditions(self, searched_name):
-        return self.show_subdetector(searched_name).values_list('conditions')
+        # return self.show_subdetector(searched_name).values_list('conditions')
 
-        # return Subdetector.objects(name=searched_name).values_list('conditions')
+        return Subdetector.objects(name=searched_name).values_list('conditions')
 
     def show_subdetector_condition(self, searched_name, searched_condition):
         return Subdetector.objects(name=searched_name).first().conditions.filter(name=searched_condition).first()
