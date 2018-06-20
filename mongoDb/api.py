@@ -3,7 +3,7 @@ from models import Subdetector, Condition
 from classes.db_connect import DB_connect
 
 connect = DB_connect()
-connect.dbname('cernSimple')
+connect.dbname('conditionsDB')
 
 
 class API:
@@ -31,11 +31,10 @@ class API:
         # Subdetector.objects(name=searched_name).first().conditions.objects(iov__lte=searched_iov).first()
         # Condition.objects(subdetects=asdas && iov__lte=5 && iov__gte = 3)
 
-        try:
-            int(searched_iov)
+        if "-" not in searched_iov:
             return [Subdetector.objects(name=searched_name).first().conditions.filter(iov=searched_iov).first()]
 
-        except:
+        else:
 
             x, y = searched_iov.split("-")
             myIOVs = []
@@ -47,3 +46,5 @@ class API:
             # print myIOVs
             # return r.json()['conditions']
             return myIOVs
+
+    def add_subdetector_iov(self, searched_name, searched_iov):
