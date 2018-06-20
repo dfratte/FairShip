@@ -47,4 +47,4 @@ class API:
             # return r.json()['conditions']
             return myIOVs
 
-    def add_subdetector_iov(self, searched_name, searched_iov):
+    # def add_subdetector_iov(self, searched_name, searched_iov):
