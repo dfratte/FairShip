@@ -12,13 +12,10 @@ class API:
         return Subdetector.objects()
 
     def show_subdetector(self, searched_name):
-        # return Subdetector.objects(name=searched_name).first()
         return Subdetector.objects(name=searched_name).first()
 
     def show_subdetector_conditions(self, searched_name):
-        # return self.show_subdetector(searched_name).values_list('conditions')
-
-        return Subdetector.objects(name=searched_name).values_list('conditions')
+        return self.show_subdetector(searched_name).conditions
 
     def show_subdetector_condition(self, searched_name, searched_condition):
         return Subdetector.objects(name=searched_name).first().conditions.filter(name=searched_condition).first()
@@ -47,4 +44,5 @@ class API:
             # return r.json()['conditions']
             return myIOVs
 
-    # def add_subdetector_iov(self, searched_name, searched_iov):
+    def add_subdetector_iov(self, searched_name, searched_iov):
+        return "sss"
