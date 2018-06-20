@@ -82,3 +82,4 @@ if args.subdetector is not None and args.condition is not None:
 if args.subdetector is not None and args.iov is not None:
     iov = api.show_subdetector_iov(args.subdetector, args.iov)
 #     print iov.to_json()
+    for i in iov: print i.to_json()
