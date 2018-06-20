@@ -58,4 +58,4 @@ build/
 # Doxygen
 /mongoDb/html
 /mongoDb/latex
-
+*/sample_text.conf
