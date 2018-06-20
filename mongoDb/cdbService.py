@@ -21,6 +21,8 @@ Developed by Eindhoven University of Technology (ST) under some Open Source Lice
 This script is used to retrieve condition data from a condition database.
 '''
 
+api = API()
+
 parser = argparse.ArgumentParser(description=HELP_DESC,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
 
@@ -66,17 +68,17 @@ if (flag_sd_c1 or flag_sd_c2 or flag_sd_c3 or flag_ls):
     parser.error('arguments error')
 
 if args.list_subdetectors is True:
-    subdetectors = list_subdetectors()
+    subdetectors = api.list_subdetectors()
 #     print subdetectors.to_json()
 
 if args.subdetector is not None and args.condition is None:
-    subdetector = show_subdetector(args.subdetector)
+    subdetector = api.show_subdetector(args.subdetector)
 #     print subdetector.to_json()
 
 if args.subdetector is not None and args.condition is not None:
-    condition = show_subdetector_condition(args.subdetector, args.condition)
+    condition = api.show_subdetector_condition(args.subdetector, args.condition)
 #     print condition.to_json()
 
 if args.subdetector is not None and args.iov is not None:
-    iov = show_subdetector_iov(args.subdetector, args.iov)
+    iov = api.show_subdetector_iov(args.subdetector, args.iov)
 #     print iov.to_json()
