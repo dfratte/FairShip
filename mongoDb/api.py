@@ -24,7 +24,6 @@ class API:
         return Subdetector.objects(name=searched_name).first().conditions.filter(iov=searched_iovs).first()
 
     def show_subdetector_iov(self, searched_name, searched_iov):
-
         # Subdetector.objects(name=searched_name).first().conditions.objects(iov__lte=searched_iov).first()
         # Condition.objects(subdetects=asdas && iov__lte=5 && iov__gte = 3)
 
@@ -44,5 +43,6 @@ class API:
             # return r.json()['conditions']
             return myIOVs
 
-    def add_subdetector_iov(self, searched_name, searched_iov):
-        return "sss"
+    def add_subdetector(self, subdetector_name):
+        Subdetector(name=subdetector_name).save()
+        return 'New subdetector added!'
