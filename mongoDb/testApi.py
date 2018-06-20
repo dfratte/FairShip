@@ -2,6 +2,8 @@ import unittest
 
 from api import *
 
+api = API()
+
 subdetector_1 = Subdetector(name='subdetector_test_1')
 subdetector_2 = Subdetector(name='subdetector_test_2')
 subdetector_3 = Subdetector(name='subdetector_test_3')
@@ -13,6 +15,7 @@ class TestApi(unittest.TestCase):
     def setUpClass(cls):
         super(TestApi, cls).setUpClass()
         # TODO use the correct method to add the information on database instead of add manually....
+        api = API()
         subdetector_1.save()
         subdetector_2.save()
         subdetector_3.save()
@@ -32,14 +35,14 @@ class TestApi(unittest.TestCase):
     """
 
     def test_list_subdetectors(self):
-        subdetectors = list_subdetectors()
+        subdetectors = api.list_subdetectors()
         self.assertGreaterEqual(subdetectors.__len__(), 3)
 
     def test_show_subdetector(self):
-        subdetector = show_subdetector(subdetector_1.name)
+        subdetector = api.show_subdetector(subdetector_1.name)
         self.assertIsNotNone(subdetector)
         self.assertEqual(subdetector.name, subdetector_1.name)
 
     def test_show_subdetector_not_found(self):
-        subdetector = show_subdetector('invalid_subdetector')
+        subdetector = api.show_subdetector('invalid_subdetector')
         self.assertIsNone(subdetector)
