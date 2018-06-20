@@ -1,25 +1,39 @@
 import random
-
 from mongoengine import connect
-
 from models import *
+import datetime
+import string
+import random
 
-connect(db='cernSimple',
-        # user='',
-        # password='',
-        host='localhost',
-        port=27017
-        )
+def tag_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    return ''.join(random.choice(chars) for _ in range(size))
 
-for i in range(1, 100):
-    sub = Subdetector(name='subdetector' + i.__str__())
+connect(db='conditionsDB', host='localhost', port=27017)
 
-    for c in range(1, 10):
-        c = Condition(name='condition_' + c.__str__(), iov=c, tag='tag_' + c.__str__())
+subdetectors = ["Target Tracker", "Muon", "hcal", "ecal", "Veto Taggers", "BckGr Tagger", "Drift Tubes"]
 
-        for j in range(1, 20):
-            seq = random.randint(1, 1000)
-            c.parameters.append(Parameter(name='param_' + seq.__str__(), value='value_' + seq.__str__(), iov=seq))
+gain        = ["Gain", [["EtInCenter", "10.*GeV 10.*GeV 10.*GeV"], ["EtSlope", "7.*GeV  7.*GeV  7.*GeV"], ["PedShift", "0.4"], ["PinPedShift", "1.1"], ["CoherentNoise", "0.3"], ["IncoherentNoise", "1.2"], ["StochasticTerm", "0.10"], ["GainError", "0.01"]]]
+cham01      = ["Cham001", [["dPosXYZ","0 0 0"], ["dRotXYZ","0 0 0"]]]
+cham02      = ["Cham002", [["dPosXYZ","1 1 1"], ["dRotXYZ","1 1 1"]]]
+cham03      = ["Cham003", [["dPosXYZ","2 2 2"], ["dRotXYZ","2 2 2"]]]
+temperature = ["GlobalTemperature", [["temperature", "100C"]]]
 
-        sub.conditions.append(c)
+conditions = [gain, cham01, cham02, cham03, temperature]
+
+for s in subdetectors:
+    
+    sub = Subdetector(name=s.__str__())
+    
+    for c in conditions:
+        
+        condition = Condition(name=c[0], iov=datetime.datetime.now(), tag=tag_generator())
+         
+        params = c[1]
+        
+        for p in params:
+        
+            condition.parameters.append(Parameter(name=p[0], value=p[1], iov=datetime.datetime.now()))
+        
+        sub.conditions.append(condition)
+        
         sub.save()
