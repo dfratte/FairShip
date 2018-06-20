@@ -18,17 +18,14 @@ class API:
         return self.show_subdetector(searched_name).conditions
 
     def show_subdetector_condition(self, searched_name, searched_condition):
-        return Subdetector.objects(name=searched_name).first().conditions.filter(name=searched_condition).first()
-
-    def show_subdetector_iovs(self, searched_name, searched_iovs):
-        return Subdetector.objects(name=searched_name).first().conditions.filter(iov=searched_iovs).first()
+        return self.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
     def show_subdetector_iov(self, searched_name, searched_iov):
         # Subdetector.objects(name=searched_name).first().conditions.objects(iov__lte=searched_iov).first()
         # Condition.objects(subdetects=asdas && iov__lte=5 && iov__gte = 3)
 
         if "-" not in searched_iov:
-            return [Subdetector.objects(name=searched_name).first().conditions.filter(iov=searched_iov).first()]
+            return [self.show_subdetector_conditions(searched_name).filter(iov=searched_iov).first()]
 
         else:
 
@@ -36,11 +33,9 @@ class API:
             myIOVs = []
 
             for i in range(int(x), int(y) + 1):
-                myIOV = Subdetector.objects(name=searched_name).first().conditions.filter(iov=i).first()
+                myIOV = self.show_subdetector_conditions(searched_name).filter(iov=i).first()
                 myIOVs.append(myIOV)
 
-            # print myIOVs
-            # return r.json()['conditions']
             return myIOVs
 
     def add_subdetector(self, subdetector_name):
