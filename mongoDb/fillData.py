@@ -1,7 +1,8 @@
 import random
 
+from mongoengine import connect
+
 from models import *
-from mongoengine import *
 
 connect(db='cernSimple',
         # user='',

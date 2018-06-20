@@ -1,5 +1,4 @@
-# from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField
-from mongoengine import *
+from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField, LongField
 
 
 class Parameter(EmbeddedDocument):
