@@ -97,7 +97,7 @@ class Service(object):
                               dest='iov',
                               default=None,
                               required=False,
-                              type=valid_date,
+#                               type=valid_date,
                               help='Exact IOV of the Condition to retrieve')
 
         group_lsn.add_argument('-as', '--add-subdetector',
@@ -144,11 +144,8 @@ class Service(object):
             return condition
 
         if args.subdetector is not None and args.iov is not None:
-            print "Feature not implemented!"
-        #     iov = api.show_subdetector_iov(args.subdetector, args.iov)
-        #     print iov
-        #     for i in iov:
-        #         print i
+            iov = api.show_subdetector_iov(args.subdetector, args.iov)
+            return iov
 
         if args.new_sub is not None:
             print "-as executed"
@@ -158,7 +155,6 @@ class Service(object):
                 print "Subdetector added successfully!" if (result == 1) else "Error adding new Subdetector"
 
         return True
-
 
 if __name__ == '__main__':
     Service().run()

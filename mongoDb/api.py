@@ -70,7 +70,7 @@ class API(object):
                 current_formatted_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
 
                 if ( current_formatted_iov >= start_iov and current_formatted_iov <= end_iov):
-
+                    
                     found_conditions.append(c)
 
             return found_conditions
