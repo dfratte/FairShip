@@ -67,7 +67,7 @@ group_ci.add_argument('-si', '--show-iov',
                       dest='iov',
                       default=None,
                       required=False,
-                      type=valid_date,
+                      # type=valid_date,
                       help='Exact IOV of the Condition to retrieve')
 
 group_lsn.add_argument('-as', '--add-subdetector',
@@ -127,9 +127,9 @@ if args.subdetector is not None and args.condition is not None:
         print condition.to_json()
 
 if args.subdetector is not None and args.iov is not None:
-    print "Feature not implemented!"
-#     iov = api.show_subdetector_iov(args.subdetector, args.iov)
-#     print iov
+    # print "Feature not implemented!"
+    iov = api.show_subdetector_iov(args.subdetector, args.iov)
+    print iov
 #     for i in iov:
 #         print i
 

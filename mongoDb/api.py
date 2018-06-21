@@ -3,11 +3,20 @@ ConditionsDB API
 """
 from classes.db_connect import DbConnect
 from models import Subdetector
+from datetime import datetime
+from mongoengine import ComplexDateTimeField
 
 class API(object):
 
     def __init__(self):
         DbConnect.get_connection('conditionsDB')
+
+    @staticmethod
+    def convert_date(date):
+        if type(date) is datetime:
+            return ComplexDateTimeField()._convert_from_datetime(date)
+        elif type(date) is str:
+            return ComplexDateTimeField()._convert_from_string(date)
 
     @staticmethod
     def list_subdetectors():
@@ -28,29 +37,43 @@ class API(object):
     @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
 
-        # return type(searched_iov) + ", value-> " + searched_iov + ", new date-> " + datetime.datetime(searched_iov)
-
+        conditions = API.show_subdetector(searched_name).conditions
 
         if "-" not in searched_iov:
-            # return [self.show_subdetector_conditions(searched_name).filter(iov=searched_iov).first()]
-            return API.show_subdetector_conditions(searched_name).find({'iov': searched_iov})
+
+            for c in conditions:
+
+                current_iov_datetime = API.convert_date(c["iov"])
+
+                formatted_searched_iov = API.convert_date(searched_iov)
+
+                formatted_current_iov = datetime.strptime(current_iov_datetime,'%Y,%m,%d,%H,%M,%S,%f')
+
+                if formatted_current_iov == formatted_searched_iov:
+
+                    return c
 
         else:
 
+            found_conditions = []
+
             start, end = searched_iov.split("-")
 
-            for conditions in API.show_subdetector_conditions(searched_name).find({'iov': {'$gte': start, '$lt': end}}):
-                return conditions
+            start_iov = API.convert_date(start)
 
+            end_iov = API.convert_date(end)
 
-            # x, y = searched_iov.split("-")
-            # myIOVs = []
-            #
-            # for i in range(int(x), int(y) + 1):
-            #     myIOV = self.show_subdetector_conditions(searched_name).filter(iov=i).first()
-            #     myIOVs.append(myIOV)
-            #
-            # return myIOVs
+            for c in conditions:
+
+                current_iov_datetime = API.convert_date(c["iov"])
+
+                current_formatted_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
+
+                if ( current_formatted_iov >= start_iov and current_formatted_iov <= end_iov):
+
+                    found_conditions.append(c)
+
+            return found_conditions
 
     @staticmethod
     def add_subdetector(new_subdetector):
