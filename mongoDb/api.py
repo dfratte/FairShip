@@ -1,11 +1,13 @@
+"""@package mongoDb
+ConditionsDB API
+"""
+from classes.db_connect import DbConnect
 from models import Subdetector
-from classes.db_connect import DB_connect
 
 class API(object):
 
     def __init__(self):
-        connect = DB_connect()
-        connect.dbname('conditionsDB')
+        DbConnect.get_connection('conditionsDB')
 
     @staticmethod
     def list_subdetectors():
@@ -28,22 +30,23 @@ class API(object):
         # Condition.objects(subdetects=asdas && iov__lte=5 && iov__gte = 3)
 
         if "-" not in searched_iov:
-            return [Subdetector.objects(name=searched_name).first().conditions.filter(iov=searched_iov).first()]
+            return [self.show_subdetector_conditions(searched_name).filter(iov=searched_iov).first()]
 
         else:
-
             x, y = searched_iov.split("-")
             myIOVs = []
 
             for i in range(int(x), int(y) + 1):
-                myIOV = Subdetector.objects(name=searched_name).first().conditions.filter(iov=i).first()
+                myIOV = self.show_subdetector_conditions(searched_name).filter(iov=i).first()
                 myIOVs.append(myIOV)
 
-            # print myIOVs
-            # return r.json()['conditions']
             return myIOVs
 
     @staticmethod
-    def add_subdetector(subdetector_name):
-        Subdetector(name=subdetector_name).save()
-        return 'New subdetector added!'
+    def add_subdetector(new_subdetector):
+        try:
+            Subdetector(**new_subdetector).save()
+        except ValueError:
+            return -1
+
+        return 1

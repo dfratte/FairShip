@@ -1,3 +1,6 @@
+"""@package mongoDb
+ConditionsDB Command Line Interface
+"""
 import argparse
 import json
 
@@ -50,26 +53,32 @@ group_lsn.add_argument('-ss', '--show-subdetector',
                        dest='subdetector',
                        default=None,
                        required=False,
-                       help='Name of the Subdetector to retrieve.')
+                       help='Name of the Subdetector to retrieve')
 
 group_ci.add_argument('-sc', '--show-condition',
                       dest='condition',
                       default=None,
                       required=False,
-                      help='Name of the Condition to retrieve.')
+                      help='Name of the Condition to retrieve')
 
 group_ci.add_argument('-si', '--show-iov',
                       dest='iov',
                       default=None,
                       required=False,
                       type=valid_date,
-                      help='Exact IOV of the Condition to retrieve.')
+                      help='Exact IOV of the Condition to retrieve')
 
 group_lsn.add_argument('-as', '--add-subdetector',
                        dest='new_sub',
                        default=None,
                        required=False,
                        help='Path to a JSON file containing the specs for a new Subdetector ant its Conditions')
+
+
+parser.add_argument('-v', '--verbose',
+                       dest='verbose',
+                       help='Prints out to the console the output of a command',
+                       action="store_true")
 
 args = parser.parse_args()
 
@@ -103,19 +112,21 @@ if (flag_ls or flag_cd or flag_iov or flag_add_sub):
     parser.error('arguments error')
 
 if args.list_subdetectors is True:
-    print "-ls executed"
     subdetectors = api.list_subdetectors()
-    print subdetectors.to_json()
+    if(args.verbose):
+        print subdetectors.to_json()
 
 if args.subdetector is not None and args.condition is None and args.iov is None:
     print "-ss executed"
     subdetector = api.show_subdetector(args.subdetector)
-    print subdetector.to_json()
+    if(args.verbose):
+        print subdetector.to_json()
 
 if args.subdetector is not None and args.condition is not None:
     print "-sc executed"
     condition = api.show_subdetector_condition(args.subdetector, args.condition)
-    print condition.to_json()
+    if(args.verbose):
+        print condition.to_json()
 
 if args.subdetector is not None and args.iov is not None:
     print "Feature not implemented!"

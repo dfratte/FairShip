@@ -48,3 +48,14 @@ build/
 # Eclipse
 *.project
 *.pydevproject
+
+# Coverage
+*.coverage
+
+# __init__.py
+*/__init__.py
+
+# Doxygen
+/mongoDb/html
+/mongoDb/latex
+*/sample_text.conf
