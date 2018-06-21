@@ -17,6 +17,9 @@ CONDITION_2 = Condition(name='condition_test_2')
 
 
 class TestApi(unittest.TestCase):
+    """
+    Unit tests for API class
+    """
 
     @classmethod
     def setUpClass(cls):
@@ -41,25 +44,43 @@ class TestApi(unittest.TestCase):
         self.assertGreaterEqual(subdetectors.count(), 2)
 
     def test_show_subdetector(self):
+        """
+        Retrieve an existing subdetector
+        """
         subdetector = API.show_subdetector(SUBDETECTOR_1.name)
         self.assertEqual(subdetector.name, SUBDETECTOR_1.name)
 
     def test_show_subdetector_not_found(self):
+        """
+        Try to retrieve a subdetector that does not exist in the DB.
+        """
         subdetector = API.show_subdetector('invalid_subdetector')
         self.assertIsNone(subdetector)
 
     def test_show_subdetector_conditions(self):
+        """
+        Retrieve subdetector that has 2 conditions.
+        """
         conditions = API.show_subdetector_conditions(SUBDETECTOR_1.name)
         self.assertEqual(conditions.count(), 2)
 
-    def test_show_subdetector_whitout_conditions(self):
+    def test_show_subdetector_without_conditions(self):
+        """
+        Retrieve a subdetector that does not contain any condition.
+        """
         conditions = API.show_subdetector_conditions(SUBDETECTOR_2.name)
         self.assertEqual(conditions.count(), 0)
 
     def test_show_subdetector_condition(self):
+        """
+        Find subdetector by valid condition name.
+        """
         condition = API.show_subdetector_condition(SUBDETECTOR_1.name, CONDITION_1.name)
         self.assertEqual(condition.name, CONDITION_1.name)
 
     def test_show_subdetector_with_invalid_condition(self):
+        """
+        Search subdetector by invalid condition name.
+        """
         condition = API.show_subdetector_condition(SUBDETECTOR_1.name, 'invalid_condition')
         self.assertIsNone(condition)
