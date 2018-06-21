@@ -61,7 +61,7 @@ class Service(object):
         return False
 
 
-    def run(self):
+    def run(self, *params):
 
         api = API()
 
@@ -110,9 +110,12 @@ class Service(object):
                             help='Prints out to the console the output of a command',
                             action="store_true")
 
-        args = parser.parse_args()
+        if params:
+            args = parser.parse_args(params)
+        else:
+            args = parser.parse_args()
 
-        print vars(args)
+#         print vars(args)
 
         ### Arguments dependencies verification ###
 
@@ -123,18 +126,21 @@ class Service(object):
             subdetectors = api.list_subdetectors()
             if args.verbose:
                 print subdetectors.to_json()
+            return subdetectors
 
         if args.subdetector is not None and args.condition is None and args.iov is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
             if args.verbose:
                 print subdetector.to_json()
+            return subdetector
 
         if args.subdetector is not None and args.condition is not None:
             print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
             if args.verbose:
                 print condition.to_json()
+            return condition
 
         if args.subdetector is not None and args.iov is not None:
             print "Feature not implemented!"
@@ -149,6 +155,8 @@ class Service(object):
                 data = json.load(loaded_file)
                 result = api.add_subdetector(data)
                 print "Subdetector added successfully!" if (result == 1) else "Error adding new Subdetector"
+        
+        return True
 
 if __name__ == '__main__':
     Service().run()
