@@ -1,6 +1,8 @@
-import unittest
 import json
+import unittest
+
 from cdb_service import Service
+
 
 class TestCdbService(unittest.TestCase):
 
@@ -25,7 +27,7 @@ class TestCdbService(unittest.TestCase):
     def test_list_subdetectors_conflict_ss(self):
         with self.assertRaises(BaseException):
             self.service.run('-ls', '-ss', 'Muon')
- 
+
     def test_list_subdetectors_conflict_sc(self):
         with self.assertRaises(BaseException):
             self.service.run('-ls', '-ss', 'Muon', '-sc', 'Gain')
@@ -37,6 +39,7 @@ class TestCdbService(unittest.TestCase):
     def test_show_iov_without_sd(self):
         with self.assertRaises(BaseException):
             self.service.run('-si', '1529542553180')
+
 
 if __name__ == '__main__':
     unittest.main()

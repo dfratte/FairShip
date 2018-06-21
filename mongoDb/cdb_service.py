@@ -25,12 +25,14 @@ Developed by Eindhoven University of Technology (ST) under some Open Source Lice
 This script is used to retrieve condition data from a condition database.
 '''
 
+
 def valid_date(s):
     try:
         return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f").strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
     except ValueError:
         msg = "Not a valid date: '{0}'.".format(s)
         raise argparse.ArgumentTypeError(msg)
+
 
 class Service(object):
 
@@ -59,7 +61,6 @@ class Service(object):
             return True
 
         return False
-
 
     def run(self, *params):
 
@@ -115,7 +116,7 @@ class Service(object):
         else:
             args = parser.parse_args()
 
-#         print vars(args)
+        #         print vars(args)
 
         ### Arguments dependencies verification ###
 
@@ -155,8 +156,9 @@ class Service(object):
                 data = json.load(loaded_file)
                 result = api.add_subdetector(data)
                 print "Subdetector added successfully!" if (result == 1) else "Error adding new Subdetector"
-        
+
         return True
+
 
 if __name__ == '__main__':
     Service().run()
