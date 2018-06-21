@@ -1,12 +1,12 @@
 """@package docstring
 Unittest developed to guarantee the api integrity
 """
-
+import json
 import unittest
+from datetime import datetime
 
 from api import API
-from models import Condition, Subdetector
-
+from models import Condition, Parameter, Source, Subdetector
 
 ##
 # @var API
@@ -21,11 +21,17 @@ from models import Condition, Subdetector
 # Dummy condition for subdetector 1
 API = API()
 
+SOURCE_1 = Source(name='Source_test_1')
+
 SUBDETECTOR_1 = Subdetector(name='subdetector_test_1')
 SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
 
-CONDITION_1 = Condition(name='condition_test_1')
-CONDITION_2 = Condition(name='condition_test_2')
+CONDITION_1 = Condition(name='condition_test_1', iov=datetime.now(), tag='tag_test_1')
+PARAMETER_1 = Parameter(name='parameter_test_1', iov=datetime.now(), value='parameter_value_test_1')
+CONDITION_2 = Condition(name='condition_test_2', iov=datetime.now(), tag='tag_test_2')
+PARAMETER_2 = Parameter(name='parameter_test_2', iov=datetime.now(), value='parameter_value_test_2')
+
+SUBDETECTOR_3 = Subdetector()
 
 
 class TestApi(unittest.TestCase):
@@ -37,8 +43,14 @@ class TestApi(unittest.TestCase):
     def setUpClass(cls):
         super(TestApi, cls).setUpClass()
         # TODO use the correct method to add the information on database instead of add manually....
+        SOURCE_1.save()
+        CONDITION_1.parameters.append(PARAMETER_1)
+        CONDITION_2.parameters.append(PARAMETER_2)
+        CONDITION_1.source = SOURCE_1
+        CONDITION_2.source = SOURCE_1
         SUBDETECTOR_1.conditions.append(CONDITION_1)
         SUBDETECTOR_1.conditions.append(CONDITION_2)
+        SUBDETECTOR_3 = SUBDETECTOR_1
         SUBDETECTOR_1.save()
         SUBDETECTOR_2.save()
 
@@ -96,3 +108,9 @@ class TestApi(unittest.TestCase):
         """
         condition = API.show_subdetector_condition(SUBDETECTOR_1.name, 'invalid_condition')
         self.assertIsNone(condition)
+
+    def test_add_subdetector(self):
+        """
+        Add a subdetector to the database from json file.
+        """
+        self.assertEqual(API.add_subdetector(json.loads(SUBDETECTOR_3.to_json())), 1)
