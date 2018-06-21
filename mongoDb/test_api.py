@@ -7,6 +7,18 @@ import unittest
 from api import API
 from models import Condition, Subdetector
 
+
+##
+# @var API
+# Instance of API class to be tested
+# @var SUBDETECTOR_1
+# Dummy subdetector 1 with 2 conditions
+# @var SUBDETECTOR_2
+# Dummy subdetector 2 without any conditions
+# @var CONDITION_1
+# Dummy condition for subdetector 1
+# @var CONDITION_2
+# Dummy condition for subdetector 1
 API = API()
 
 SUBDETECTOR_1 = Subdetector(name='subdetector_test_1')
@@ -36,16 +48,16 @@ class TestApi(unittest.TestCase):
         SUBDETECTOR_2.delete()
 
     def test_list_subdetectors(self):
-        """Method that evaluate if the list subdetector method is returning a collection of subdetectors.
+        """Method to evaluate if the list subdetector method is returning a collection of subdetectors.
 
-        This test do not verify the conten of the returned list
+        This test does not verify the content of the returned list.
         """
         subdetectors = API.list_subdetectors()
         self.assertGreaterEqual(subdetectors.count(), 2)
 
     def test_show_subdetector(self):
         """
-        Retrieve an existing subdetector
+        Retrieve an existing subdetector.
         """
         subdetector = API.show_subdetector(SUBDETECTOR_1.name)
         self.assertEqual(subdetector.name, SUBDETECTOR_1.name)
