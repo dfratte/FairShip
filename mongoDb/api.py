@@ -23,25 +23,34 @@ class API(object):
 
     @staticmethod
     def show_subdetector_condition(searched_name, searched_condition):
-        return Subdetector.objects(name=searched_name).first().conditions.filter(name=searched_condition).first()
+        return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
     @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
-        # Subdetector.objects(name=searched_name).first().conditions.objects(iov__lte=searched_iov).first()
-        # Condition.objects(subdetects=asdas && iov__lte=5 && iov__gte = 3)
+
+        # return type(searched_iov) + ", value-> " + searched_iov + ", new date-> " + datetime.datetime(searched_iov)
+
 
         if "-" not in searched_iov:
-            return [self.show_subdetector_conditions(searched_name).filter(iov=searched_iov).first()]
+            # return [self.show_subdetector_conditions(searched_name).filter(iov=searched_iov).first()]
+            return API.show_subdetector_conditions(searched_name).find({'iov': searched_iov})
 
         else:
-            x, y = searched_iov.split("-")
-            myIOVs = []
 
-            for i in range(int(x), int(y) + 1):
-                myIOV = self.show_subdetector_conditions(searched_name).filter(iov=i).first()
-                myIOVs.append(myIOV)
+            start, end = searched_iov.split("-")
 
-            return myIOVs
+            for conditions in API.show_subdetector_conditions(searched_name).find({'iov': {'$gte': start, '$lt': end}}):
+                return conditions
+
+
+            # x, y = searched_iov.split("-")
+            # myIOVs = []
+            #
+            # for i in range(int(x), int(y) + 1):
+            #     myIOV = self.show_subdetector_conditions(searched_name).filter(iov=i).first()
+            #     myIOVs.append(myIOV)
+            #
+            # return myIOVs
 
     @staticmethod
     def add_subdetector(new_subdetector):
