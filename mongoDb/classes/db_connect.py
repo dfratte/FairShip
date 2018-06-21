@@ -1,15 +1,17 @@
-from mongoengine import *
+"""@package mongoDb
+Database connection class
+"""
+from mongoengine import connect
 
 
-class DB_connect:
-    # variable = "blah"
+class DbConnect(object):
 
-    def dbname(self, dbname):
-        # connect(dbname)
-
-        connect(db=dbname,
-                # user=user,
-                # password=password,
-                host='localhost',
-                port=27017
-                )
+    @staticmethod
+    def get_connection(db_name):
+        connect(
+            db=db_name,
+            # user=user,
+            # password=password,
+            host='localhost',
+            port=27017
+        )

@@ -1,3 +1,6 @@
+"""@package mongoDb
+ConditionsDB Command Line Interface
+"""
 import argparse
 import datetime as date
 

@@ -1,9 +1,11 @@
-# from mongoengine import connect
-from models import Subdetector, Condition
-from classes.db_connect import DB_connect
+"""@package mongoDb
+ConditionsDB API
+"""
+from classes.db_connect import DbConnect
+from models import Subdetector
 
-connect = DB_connect()
-connect.dbname('conditionsDB')
+connect = DbConnect()
+connect.get_connection('conditionsDB')
 
 
 class API:
