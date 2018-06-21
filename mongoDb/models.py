@@ -1,9 +1,8 @@
 """@package mongoDb
 MongoDb Models
 """
-from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField, ComplexDateTimeField, \
+from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField, DateTimeField, \
     ReferenceField
-
 
 class Source(Document):
     name = StringField(max_length=1000, null=True)
@@ -11,13 +10,13 @@ class Source(Document):
 
 class Parameter(EmbeddedDocument):
     name = StringField(max_length=1000, null=True)
-    iov = ComplexDateTimeField(null=True)
+    iov = DateTimeField(null=True)
     value = StringField(max_length=1000, null=True)
 
 
 class Condition(EmbeddedDocument):
     name = StringField(max_length=1000, null=True)
-    iov = ComplexDateTimeField(null=True)
+    iov = DateTimeField(null=True)
     tag = StringField(max_length=1000, null=True)
     parameters = EmbeddedDocumentListField(Parameter)
     source = ReferenceField(Source)
