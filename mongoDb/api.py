@@ -1,29 +1,29 @@
-# from mongoengine import connect
-from models import Subdetector, Condition
+from models import Subdetector
 from classes.db_connect import DB_connect
 
-connect = DB_connect()
-connect.dbname('conditionsDB')
+class API(object):
 
+    def __init__(self):
+        connect = DB_connect()
+        connect.dbname('conditionsDB')
 
-class API:
-
-    def list_subdetectors(self):
+    @staticmethod
+    def list_subdetectors():
         return Subdetector.objects()
 
-    def show_subdetector(self, searched_name):
+    @staticmethod
+    def show_subdetector(searched_name):
         return Subdetector.objects(name=searched_name).first()
 
     def show_subdetector_conditions(self, searched_name):
         return self.show_subdetector(searched_name).conditions
 
-    def show_subdetector_condition(self, searched_name, searched_condition):
+    @staticmethod
+    def show_subdetector_condition(searched_name, searched_condition):
         return Subdetector.objects(name=searched_name).first().conditions.filter(name=searched_condition).first()
 
-    def show_subdetector_iovs(self, searched_name, searched_iovs):
-        return Subdetector.objects(name=searched_name).first().conditions.filter(iov=searched_iovs).first()
-
-    def show_subdetector_iov(self, searched_name, searched_iov):
+    @staticmethod
+    def show_subdetector_iov(searched_name, searched_iov):
         # Subdetector.objects(name=searched_name).first().conditions.objects(iov__lte=searched_iov).first()
         # Condition.objects(subdetects=asdas && iov__lte=5 && iov__gte = 3)
 
@@ -43,6 +43,7 @@ class API:
             # return r.json()['conditions']
             return myIOVs
 
-    def add_subdetector(self, subdetector_name):
+    @staticmethod
+    def add_subdetector(subdetector_name):
         Subdetector(name=subdetector_name).save()
         return 'New subdetector added!'
