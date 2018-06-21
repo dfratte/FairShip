@@ -11,6 +11,12 @@ from models import Condition, Parameter, Subdetector, Source
 
 
 def tag_generator(size=6, chars=string.ascii_uppercase + string.digits):
+    """
+    Generates random tags
+    :param size: Size of the tag
+    :param chars: The ASCII characters contained in the tag
+    :return: Randomly generated tag name
+    """
     return ''.join(random.choice(chars) for _ in range(size))
 
 
