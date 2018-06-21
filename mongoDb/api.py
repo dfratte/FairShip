@@ -4,11 +4,10 @@ ConditionsDB API
 from classes.db_connect import DbConnect
 from models import Subdetector
 
-connect = DbConnect()
-connect.get_connection('conditionsDB')
+DbConnect.get_connection('conditionsDB')
 
 
-class API:
+class API(object):
 
     def list_subdetectors(self):
         return Subdetector.objects()

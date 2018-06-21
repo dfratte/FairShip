@@ -52,15 +52,26 @@ confidence=
 # no Warning level messages displayed, use"--disable=all --enable=classes
 # --disable=W"
 
+
+# relative-import is a problem of python 2.* and pylint
+# no-member is removed because pylint cannot find objects in classes that are mongoengine Documents
+# no-self-use is removed because of the API class of api.py. We want the functions grouped in a class
+# invalid-name is removed because we have variables that pylint detects them as constants
+# too-few-public-methods is removed because we have a class with only one method and pylint complains
+
+#    attribute-defined-outside-init,
+#    duplicate-code,
+#    fixme,
+#    missing-docstring,
+#    protected-access,
+
 disable=
-    attribute-defined-outside-init,
-    duplicate-code,
-    fixme,
-    invalid-name,
-    missing-docstring,
-    protected-access,
-    too-few-public-methods,
     relative-import,
+    no-member,
+    no-self-use,
+    invalid-name,
+    too-few-public-methods,
+
 
 
 
