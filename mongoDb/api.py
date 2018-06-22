@@ -34,9 +34,25 @@ class API(object):
     def show_subdetector_condition(searched_name, searched_condition):
         return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
+
     @staticmethod
     def show_subdetector_tag(searched_name, searched_tag):
-        return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag).first()
+
+        if not searched_name.strip():
+            return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag)
+
+        else:
+            subdetectors = Subdetector.objects.all()
+            found_tag = []
+
+            for s in subdetectors:
+                for c in s.conditions:
+                    current_tag = c["tag"]
+
+                    if searched_tag == current_tag:
+                        found_tag.append(c)
+
+            return found_tag
 
     @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
