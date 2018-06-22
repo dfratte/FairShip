@@ -145,6 +145,12 @@ class Service(object):
 
         if args.subdetector is not None and args.iov is not None:
             iov = api.show_subdetector_iov(args.subdetector, args.iov)
+            if args.verbose:
+                if type(iov) is not list:
+                    print iov.to_json() #FIXME returns a list or a single object
+                else:
+                    for i in iov:
+                        print i.to_json()
             return iov
 
         if args.new_sub is not None:
