@@ -38,7 +38,7 @@ class API(object):
     @staticmethod
     def show_subdetector_tag(searched_name, searched_tag):
 
-        if not searched_name.strip():
+        if searched_name is not None:
             return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag)
 
         else:

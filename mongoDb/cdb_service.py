@@ -3,8 +3,9 @@ ConditionsDB Command Line Interface
 """
 import argparse
 import json
-from datetime import datetime
 
+from datetime import datetime
+from models import Condition
 from api import API
 
 HELP_DESC = '''
@@ -78,37 +79,43 @@ class Service(object):
 
         group_lsn.add_argument('-ls', '--list-subdetectors',
                                dest='list_subdetectors',
-                               help='Flag to retrieve all Subdetectors of the Conditions db',
+                               help='Lists all Subdetectors of the Conditions database.',
                                action="store_true")
 
         group_lsn.add_argument('-ss', '--show-subdetector',
                                dest='subdetector',
                                default=None,
                                required=False,
-                               help='Name of the Subdetector to retrieve')
+                               help='Shows all the data related to a specific Subdetector.')
 
         group_ci.add_argument('-sc', '--show-condition',
                               dest='condition',
                               default=None,
                               required=False,
-                              help='Name of the Condition to retrieve')
+                              help='Shows a specific Condition of a Subdetector. Search is done by Condition name.')
 
         group_ci.add_argument('-si', '--show-iov',
                               dest='iov',
                               default=None,
                               required=False,
 #                               type=valid_date,
-                              help='Exact IOV of the Condition to retrieve')
+                              help='Retrieves a list of Conditions based on a specific IOV or IOV range.')
 
         group_lsn.add_argument('-as', '--add-subdetector',
                                dest='new_sub',
                                default=None,
                                required=False,
-                               help='Path to a JSON file containing the specs for a new Subdetector ant its Conditions')
+                               help='Adds a new Subdetector and its Conditions from a path to a JSON file.')
+
+        group_ci.add_argument('-st', '--show-tag',
+                            dest='tag',
+                            default=None,
+                            required=False,
+                            help='Retrieves a list of Conditions based on a specific tag.')
 
         parser.add_argument('-v', '--verbose',
                             dest='verbose',
-                            help='Prints out to the console the output of a command',
+                            help='Prints out to the console the output of a command.',
                             action="store_true")
 
         if params:
@@ -129,7 +136,7 @@ class Service(object):
                 print subdetectors.to_json()
             return subdetectors
 
-        if args.subdetector is not None and args.condition is None and args.iov is None:
+        if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
             if args.verbose:
@@ -142,12 +149,23 @@ class Service(object):
             if args.verbose:
                 print condition.to_json()
             return condition
+        
+        if args.tag is not None:
+            print "-st executed"
+            condition = api.show_subdetector_tag(args.subdetector, args.tag)
+            if args.verbose:
+                if type(condition) is Condition:
+                    print condition.to_json()
+                else:
+                    for i in condition:
+                        print i.to_json()
+            return condition
 
         if args.subdetector is not None and args.iov is not None:
             iov = api.show_subdetector_iov(args.subdetector, args.iov)
             if args.verbose:
                 if type(iov) is not list:
-                    print iov.to_json() #FIXME returns a list or a single object
+                    print iov.to_json()
                 else:
                     for i in iov:
                         print i.to_json()
