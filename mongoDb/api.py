@@ -35,6 +35,10 @@ class API(object):
         return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
     @staticmethod
+    def show_subdetector_tag(searched_name, searched_tag):
+        return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag).first()
+
+    @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
 
         conditions = API.show_subdetector(searched_name).conditions
