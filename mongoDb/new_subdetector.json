@@ -1,120 +1,120 @@
 {
-   "name":"Subdetector XYZ",
+   "name":"New Subdetector XYZ",
    "conditions":[
       {
          "name":"Gain",
-         "iov":"2018-06-21T00:55:53.195Z",
-         "tag":"WACTOD",
+         "iov":"2018,06,21,17,26,38,434333",
+         "tag":"OB4TAQ",
          "parameters":[
             {
                "name":"EtInCenter",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435188",
                "value":"10.*GeV 10.*GeV 10.*GeV"
             },
             {
                "name":"EtSlope",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435253",
                "value":"7.*GeV  7.*GeV  7.*GeV"
             },
             {
                "name":"PedShift",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435307",
                "value":"0.4"
             },
             {
                "name":"PinPedShift",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435356",
                "value":"1.1"
             },
             {
                "name":"CoherentNoise",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435404",
                "value":"0.3"
             },
             {
                "name":"IncoherentNoise",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435455",
                "value":"1.2"
             },
             {
                "name":"StochasticTerm",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435502",
                "value":"0.10"
             },
             {
                "name":"GainError",
-               "iov":"2018-06-21T00:55:53.196Z",
+               "iov":"2018,06,21,17,26,38,435548",
                "value":"0.01"
             }
          ],
-         "source":"5b2adb795d08a6406ce70538"
+         "source":"5b2bc3ae5d08a67120db6e54"
       },
       {
          "name":"Cham001",
-         "iov":"2018-06-21T00:55:53.197Z",
-         "tag":"H2Z4IE",
+         "iov":"2018,06,21,17,26,38,437536",
+         "tag":"2XQOE3",
          "parameters":[
             {
                "name":"dPosXYZ",
-               "iov":"2018-06-21T00:55:53.198Z",
+               "iov":"2018,06,21,17,26,38,438583",
                "value":"0 0 0"
             },
             {
                "name":"dRotXYZ",
-               "iov":"2018-06-21T00:55:53.198Z",
+               "iov":"2018,06,21,17,26,38,438649",
                "value":"0 0 0"
             }
          ],
-         "source":"5b2adb795d08a6406ce7053a"
+         "source":"5b2bc3ae5d08a67120db6e53"
       },
       {
          "name":"Cham002",
-         "iov":"2018-06-21T00:55:53.199Z",
-         "tag":"JE5GY7",
+         "iov":"2018,06,21,17,26,38,440250",
+         "tag":"2XQOE3",
          "parameters":[
             {
                "name":"dPosXYZ",
-               "iov":"2018-06-21T00:55:53.200Z",
+               "iov":"2018,06,21,17,26,38,440993",
                "value":"1 1 1"
             },
             {
                "name":"dRotXYZ",
-               "iov":"2018-06-21T00:55:53.200Z",
+               "iov":"2018,06,21,17,26,38,441058",
                "value":"1 1 1"
             }
          ],
-         "source":"5b2adb795d08a6406ce70538"
+         "source":"5b2bc3ae5d08a67120db6e53"
       },
       {
          "name":"Cham003",
-         "iov":"2018-06-21T00:55:53.203Z",
-         "tag":"MHVSRB",
+         "iov":"2018,06,21,17,26,38,442798",
+         "tag":"2XQOE3",
          "parameters":[
             {
                "name":"dPosXYZ",
-               "iov":"2018-06-21T00:55:53.204Z",
+               "iov":"2018,06,21,17,26,38,443509",
                "value":"2 2 2"
             },
             {
                "name":"dRotXYZ",
-               "iov":"2018-06-21T00:55:53.204Z",
+               "iov":"2018,06,21,17,26,38,443604",
                "value":"2 2 2"
             }
          ],
-         "source":"5b2adb795d08a6406ce7053a"
+         "source":"5b2bc3ae5d08a67120db6e53"
       },
       {
          "name":"GlobalTemperature",
-         "iov":"2018-06-21T00:55:53.205Z",
-         "tag":"CXUB2T",
+         "iov":"2018,06,21,17,26,38,445560",
+         "tag":"7IDMBN",
          "parameters":[
             {
                "name":"temperature",
-               "iov":"2018-06-21T00:55:53.206Z",
+               "iov":"2018,06,21,17,26,38,446400",
                "value":"100C"
             }
          ],
-         "source":"5b2adb795d08a6406ce70539"
-      }
+         "source":"5b2bc3ae5d08a67120db6e52"
+	 }
    ]
 }

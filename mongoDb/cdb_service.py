@@ -3,6 +3,7 @@ ConditionsDB Command Line Interface
 """
 import argparse
 import json
+import io
 
 from datetime import datetime
 from models import Condition
@@ -10,22 +11,25 @@ from api import API
 
 HELP_DESC = '''
 
-  #####  ####### ######  #     # 
- #     # #       #     # ##    # 
- #       #       #     # # #   # 
- #       #####   ######  #  #  # 
- #       #       #   #   #   # # 
- #     # #       #    #  #    ## 
-  #####  ####### #     # #     # 
 
-Conditions Database Service
-FairSHiP 2018
+  #####  ####### ######  #     #             ####### #     #       #        
+ #     # #       #     # ##    #                #    #     #      #  ###### 
+ #       #       #     # # #   #                #    #     #     #   #      
+ #       #####   ######  #  #  #    #####       #    #     #    #    #####  
+ #       #       #   #   #   # #                #    #     #   #     #      
+ #     # #       #    #  #    ##                #    #     #  #      #      
+  #####  ####### #     # #     #                #     #####  #       ###### 
+                                                                            
+                        Conditions Database Service
+                                FairSHiP 2018
 
-Developed by Eindhoven University of Technology (ST) under some Open Source License
+Developed by Eindhoven University of Technology under GNU General Public License v3.0
+
+Software Technology PDEng Program
+Generation 2017
 
 This script is used to retrieve condition data from a condition database.
 '''
-
 
 def valid_date(s):
     try:
@@ -37,11 +41,23 @@ def valid_date(s):
 
 class Service(object):
 
-    def validate_arguments(self, args):
+    @staticmethod
+    def save(file, data, mode):
+        with io.open(file, mode, encoding='utf-8') as f:
+            f.write(unicode(data));
+            print "Data exported successfully!"
+    
+    @staticmethod
+    def output(data):
+        parsed = json.loads(data.to_json())
+        print json.dumps(parsed, indent=4, sort_keys=True)
+
+    @staticmethod
+    def validate_arguments(args):
 
         list_sd_filter = [x for x in vars(args) if (x != 'list_subdetectors' and vars(args)[x] is not None)]
 
-        flag_ls = len(list_sd_filter) > 1 and args.list_subdetectors is True
+        flag_ls = len(list_sd_filter) > 2 and args.list_subdetectors is True
 
         show_cd_filter = [x for x in vars(args) if (x != 'condition' \
                                                     and vars(args)[x] is not None and vars(args)[x] is not False)]
@@ -98,7 +114,6 @@ class Service(object):
                               dest='iov',
                               default=None,
                               required=False,
-#                               type=valid_date,
                               help='Retrieves a list of Conditions based on a specific IOV or IOV range.')
 
         group_lsn.add_argument('-as', '--add-subdetector',
@@ -108,15 +123,21 @@ class Service(object):
                                help='Adds a new Subdetector and its Conditions from a path to a JSON file.')
 
         group_ci.add_argument('-st', '--show-tag',
-                            dest='tag',
-                            default=None,
-                            required=False,
-                            help='Retrieves a list of Conditions based on a specific tag.')
+                              dest='tag',
+                              default=None,
+                              required=False,
+                              help='Retrieves a list of Conditions based on a specific tag.')
 
         parser.add_argument('-v', '--verbose',
                             dest='verbose',
                             help='Prints out to the console the output of a command.',
                             action="store_true")
+        
+        parser.add_argument('-f', '--file',
+                            dest='output_file',
+                            default=None,
+                            required=False,
+                            help='Redirects the output of a command to a JSON file.')
 
         if params:
             args = parser.parse_args(params)
@@ -133,42 +154,64 @@ class Service(object):
         if args.list_subdetectors is True:
             subdetectors = api.list_subdetectors()
             if args.verbose:
-                print subdetectors.to_json()
+                for idx, s in enumerate(subdetectors):
+                    print idx+1,"-", s["name"]
+            if args.output_file:
+                self.save(args.output_file, subdetectors.to_json(), 'w')
             return subdetectors
 
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
             if args.verbose:
-                print subdetector.to_json()
+                self.output(subdetector)
+            if args.output_file:
+                self.save(args.output_file, subdetector.to_json(), 'w')
             return subdetector
 
-        if args.subdetector is not None and args.condition is not None:
+        if args.subdetector is not None and args.condition is not None and args.iov is None:
             print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
             if args.verbose:
-                print condition.to_json()
+                self.output(condition)
+            if args.output_file:
+                self.save(args.output_file, condition.to_json(), 'w')
             return condition
-        
+
         if args.tag is not None:
             print "-st executed"
             condition = api.show_subdetector_tag(args.subdetector, args.tag)
-            if args.verbose:
-                if type(condition) is Condition:
-                    print condition.to_json()
-                else:
+            if isinstance(condition, Condition):
+                if args.verbose:
+                    self.output(condition)
+                if args.output_file:
+                    self.save(args.output_file, condition.to_json(), 'w')
+            else:
+                if args.verbose:
                     for i in condition:
-                        print i.to_json()
+                        self.output(i)
+                if args.output_file:
+#                     for i in condition:
+#                         self.save(args.output_file, i.to_json(), 'a')
+                    print "Unsupported data export!"
             return condition
 
         if args.subdetector is not None and args.iov is not None:
+            print "-si executed"
             iov = api.show_subdetector_iov(args.subdetector, args.iov)
-            if args.verbose:
-                if type(iov) is not list:
-                    print iov.to_json()
-                else:
+            if not isinstance(iov, list):
+                if args.verbose:
+                    self.output(iov)
+                if args.output_file:
+                    self.save(args.output_file, iov.to_json(), 'w')
+            else:
+                if args.verbose:
                     for i in iov:
-                        print i.to_json()
+                        self.output(i)
+                if args.output_file:
+#                     for i in iov:
+#                         self.save(args.output_file, i.to_json(), 'a')
+                    print "Unsupported data export!"
             return iov
 
         if args.new_sub is not None:
