@@ -2,12 +2,12 @@
 ConditionsDB Command Line Interface
 """
 import argparse
-import json
 import io
-
+import json
 from datetime import datetime
-from models import Condition
+
 from api import API
+from models import Condition
 
 HELP_DESC = '''
 
@@ -31,6 +31,7 @@ Generation 2017
 This script is used to retrieve condition data from a condition database.
 '''
 
+
 def valid_date(s):
     try:
         return datetime.strptime(s, "%Y-%m-%d %H:%M:%S.%f").strftime('%Y-%m-%d %H:%M:%S.%f')[:-3]
@@ -42,11 +43,11 @@ def valid_date(s):
 class Service(object):
 
     @staticmethod
-    def save(file, data, mode):
-        with io.open(file, mode, encoding='utf-8') as f:
-            f.write(unicode(data));
+    def save(file_name, data, mode):
+        with io.open(file_name, mode, encoding='utf-8') as f:
+            f.write(unicode(data))
             print "Data exported successfully!"
-    
+
     @staticmethod
     def output(data):
         parsed = json.loads(data.to_json())
@@ -59,18 +60,18 @@ class Service(object):
 
         flag_ls = len(list_sd_filter) > 2 and args.list_subdetectors is True
 
-        show_cd_filter = [x for x in vars(args) if (x != 'condition' \
-                                                    and vars(args)[x] is not None and vars(args)[x] is not False)]
+        show_cd_filter = [x for x in vars(args) if
+                          (x != 'condition' and vars(args)[x] is not None and vars(args)[x] is not False)]
 
         flag_cd = len(show_cd_filter) == 0 and args.condition is not None
 
-        show_iov_filter = [x for x in vars(args) if (x != 'iov' \
-                                                     and vars(args)[x] is not None and vars(args)[x] is not False)]
+        show_iov_filter = [x for x in vars(args) if
+                           (x != 'iov' and vars(args)[x] is not None and vars(args)[x] is not False)]
 
         flag_iov = len(show_iov_filter) == 0 and args.iov is not None
 
-        add_sub_filter = [x for x in vars(args) if (x != 'new_sub' \
-                                                    and vars(args)[x] is not None and vars(args)[x] is not False)]
+        add_sub_filter = [x for x in vars(args) if
+                          (x != 'new_sub' and vars(args)[x] is not None and vars(args)[x] is not False)]
 
         flag_add_sub = len(add_sub_filter) != 0 and args.new_sub is not None
 
@@ -132,7 +133,7 @@ class Service(object):
                             dest='verbose',
                             help='Prints out to the console the output of a command.',
                             action="store_true")
-        
+
         parser.add_argument('-f', '--file',
                             dest='output_file',
                             default=None,
@@ -155,7 +156,7 @@ class Service(object):
             subdetectors = api.list_subdetectors()
             if args.verbose:
                 for idx, s in enumerate(subdetectors):
-                    print idx+1,"-", s["name"]
+                    print idx + 1, "-", s["name"]
             if args.output_file:
                 self.save(args.output_file, subdetectors.to_json(), 'w')
             return subdetectors
@@ -191,8 +192,8 @@ class Service(object):
                     for i in condition:
                         self.output(i)
                 if args.output_file:
-#                     for i in condition:
-#                         self.save(args.output_file, i.to_json(), 'a')
+                    # for i in condition:
+                    #     self.save(args.output_file, i.to_json(), 'a')
                     print "Unsupported data export!"
             return condition
 
@@ -209,8 +210,8 @@ class Service(object):
                     for i in iov:
                         self.output(i)
                 if args.output_file:
-#                     for i in iov:
-#                         self.save(args.output_file, i.to_json(), 'a')
+                    # for i in iov:
+                    #     self.save(args.output_file, i.to_json(), 'a')
                     print "Unsupported data export!"
             return iov
 
@@ -222,6 +223,7 @@ class Service(object):
                 print "Subdetector added successfully!" if (result == 1) else "Error adding new Subdetector"
 
         return True
+
 
 if __name__ == '__main__':
     Service().run()

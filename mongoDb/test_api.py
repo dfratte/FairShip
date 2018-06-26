@@ -114,3 +114,12 @@ class TestApi(unittest.TestCase):
         Add a subdetector to the database from json file.
         """
         self.assertEqual(API.add_subdetector(json.loads(SUBDETECTOR_3.to_json())), 1)
+
+    def test_convert_date(self):
+        """
+        Test the convert date function
+        """
+        date = datetime.now()
+        self.assertEqual(API.convert_date(date), date.strftime('%Y,%m,%d,%H,%M,%S,%f'))
+        self.assertEqual(API.convert_date(date.strftime('%Y,%m,%d,%H,%M,%S,%f')), date)
+        self.assertEqual(API.convert_date(1), None)
