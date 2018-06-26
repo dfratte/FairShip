@@ -7,7 +7,7 @@ import string
 import datetime
 
 from classes.db_connect import DbConnect
-from models import Condition, Parameter, Subdetector, Source
+from models import Condition, Parameter, Subdetector, Source, GlobalTag
 
 
 # def tag_generator(size=6, chars=string.ascii_uppercase + string.digits):
@@ -26,6 +26,8 @@ def tag_generator(subdetector_name, condition_name):
 
 DbConnect.get_connection("conditionsDB1")
 
+global_tags = ["Gain-June-26", "GlobalTemperature-Muon-ecal"]
+
 sources = ["Alignment", "Calibration", "Central Data Acquisition"]
 
 subdetectors = ["Target Tracker", "Muon", "hcal", "ecal", "Veto Taggers", "BckGr Tagger", "Drift Tubes"]
@@ -39,6 +41,11 @@ cham03 = ["Cham003", [["dPosXYZ", "2 2 2"], ["dRotXYZ", "2 2 2"]]]
 temperature = ["GlobalTemperature", [["temperature", "100C"]]]
 
 conditions = [gain, cham01, cham02, cham03, temperature]
+
+for g in global_tags:
+    global_tag = GlobalTag(name=g.__str__())
+
+    global_tag.save()
 
 for s in sources:
     src = Source(name=s.__str__())

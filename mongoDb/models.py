@@ -7,6 +7,15 @@ from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, S
 
 # TODO Review the class definitions (Parameter, Source, Condition, Subdetector)
 
+class GlobalTag(Document):
+    """
+    GlobalTag
+    """
+    ##
+    # @var name
+    # Name of the Global Tag
+    name = StringField(max_length=1000, null=True)
+
 class Source(Document):
     """
     Source
