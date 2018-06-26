@@ -53,6 +53,8 @@ class Condition(EmbeddedDocument):
     iov = ComplexDateTimeField(null=True)
     tag = StringField(max_length=1000, null=True)
     parameters = EmbeddedDocumentListField(Parameter)
+    since = ComplexDateTimeField(null=True)
+    until = ComplexDateTimeField(null=True)
     source = ReferenceField(Source)
 
 
