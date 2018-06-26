@@ -4,23 +4,27 @@ Generate dummy data
 
 import random
 import string
-from datetime import datetime
+import datetime
 
 from classes.db_connect import DbConnect
 from models import Condition, Parameter, Subdetector, Source
 
 
-def tag_generator(size=6, chars=string.ascii_uppercase + string.digits):
-    """
-    Generates random tags
-    :param size: Size of the tag
-    :param chars: The ASCII characters contained in the tag
-    :return: Randomly generated tag name
-    """
-    return ''.join(random.choice(chars) for _ in range(size))
+# def tag_generator(size=6, chars=string.ascii_uppercase + string.digits):
+#     """
+#     Generates random tags
+#     :param size: Size of the tag
+#     :param chars: The ASCII characters contained in the tag
+#     :return: Randomly generated tag name
+#     """
+#     return ''.join(random.choice(chars) for _ in range(size))
+
+def tag_generator(subdetector_name, condition_name):
+
+    return subdetector_name+'_'+condition_name+'_'+str(datetime.datetime.now())
 
 
-DbConnect.get_connection("conditionsDB")
+DbConnect.get_connection("conditionsDB1")
 
 sources = ["Alignment", "Calibration", "Central Data Acquisition"]
 
@@ -46,20 +50,24 @@ sources_obj = Source.objects.all()
 for s in subdetectors:
 
     sub = Subdetector(name=s.__str__())
-
+    until_days = -4
     for c in conditions:
 
         count = len(sources_obj)
 
         random_index = random.randint(0, count - 1)
 
-        condition = Condition(name=c[0], iov=datetime.now(), tag=tag_generator(),
+        since_date = datetime.datetime.now() - datetime.timedelta(days=7)
+        until_date = datetime.datetime.now() + datetime.timedelta(days=until_days)
+
+        condition = Condition(name=c[0], iov=datetime.datetime.now(), tag=tag_generator(s,c[0]), since=since_date, until=until_date,
                               source=sources_obj[random_index])
+        until_days +=1
 
         params = c[1]
 
         for p in params:
-            condition.parameters.append(Parameter(name=p[0], value=p[1], iov=datetime.now()))
+            condition.parameters.append(Parameter(name=p[0], value=p[1], iov=datetime.datetime.now()))
 
         sub.conditions.append(condition)
 

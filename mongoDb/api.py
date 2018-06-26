@@ -1,10 +1,13 @@
 """@package mongoDb
 ConditionsDB API
 """
+from datetime import datetime
+
+from mongoengine import ComplexDateTimeField
+
 from classes.db_connect import DbConnect
 from models import Subdetector
-from datetime import datetime
-from mongoengine import ComplexDateTimeField
+
 
 class API(object):
 
@@ -13,10 +16,11 @@ class API(object):
 
     @staticmethod
     def convert_date(date):
-        if type(date) is datetime:
+        if isinstance(date, datetime):
             return ComplexDateTimeField()._convert_from_datetime(date)
-        elif type(date) is str:
+        elif isinstance(date, str):
             return ComplexDateTimeField()._convert_from_string(date)
+        return None
 
     @staticmethod
     def list_subdetectors():
@@ -34,25 +38,23 @@ class API(object):
     def show_subdetector_condition(searched_name, searched_condition):
         return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
-
     @staticmethod
     def show_subdetector_tag(searched_name, searched_tag):
 
         if searched_name is not None:
             return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag)
 
-        else:
-            subdetectors = Subdetector.objects.all()
-            found_tag = []
+        subdetectors = Subdetector.objects.all()
+        found_tag = []
 
-            for s in subdetectors:
-                for c in s.conditions:
-                    current_tag = c["tag"]
+        for s in subdetectors:
+            for c in s.conditions:
+                current_tag = c["tag"]
 
-                    if searched_tag == current_tag:
-                        found_tag.append(c)
+                if searched_tag == current_tag:
+                    found_tag.append(c)
 
-            return found_tag
+        return found_tag
 
     @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
@@ -67,33 +69,30 @@ class API(object):
 
                 formatted_searched_iov = API.convert_date(searched_iov)
 
-                formatted_current_iov = datetime.strptime(current_iov_datetime,'%Y,%m,%d,%H,%M,%S,%f')
+                formatted_current_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
 
                 if formatted_current_iov == formatted_searched_iov:
-
                     return c
+            return None
 
-        else:
+        found_conditions = []
 
-            found_conditions = []
+        start, end = searched_iov.split("-")
 
-            start, end = searched_iov.split("-")
+        start_iov = API.convert_date(start)
 
-            start_iov = API.convert_date(start)
+        end_iov = API.convert_date(end)
 
-            end_iov = API.convert_date(end)
+        for c in conditions:
 
-            for c in conditions:
+            current_iov_datetime = API.convert_date(c["iov"])
 
-                current_iov_datetime = API.convert_date(c["iov"])
+            current_formatted_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
 
-                current_formatted_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
+            if (current_formatted_iov >= start_iov and current_formatted_iov <= end_iov):
+                found_conditions.append(c)
 
-                if ( current_formatted_iov >= start_iov and current_formatted_iov <= end_iov):
-                    
-                    found_conditions.append(c)
-
-            return found_conditions
+        return found_conditions
 
     @staticmethod
     def add_subdetector(new_subdetector):
