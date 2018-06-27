@@ -22,22 +22,53 @@ class API(object):
             return ComplexDateTimeField()._convert_from_string(date)
         return None
 
+    '''
+    function list_subdetectors() fetches all the subdetectors in the database from Subdetector colection 
+    
+    python [file_name] -ls
+    '''
     @staticmethod
     def list_subdetectors():
         return Subdetector.objects()
 
+    '''
+    function show_subdetector() fetches all the data i.e. name, conditions, etc 
+    related to the subdetector name, which User has requested for
+    
+    python [file_name] -ss   
+    '''
     @staticmethod
     def show_subdetector(searched_name):
         return Subdetector.objects(name=searched_name).first()
 
+
+    '''
+    function show_subdetector_conditions() fetches only the conditions 
+    related to the subdetector name, which User has requested for
+    
+    python [file_name] -ss [subdetector_name]   
+    '''
     @staticmethod
     def show_subdetector_conditions(searched_name):
         return API.show_subdetector(searched_name).conditions
 
+
+    '''
+    function show_subdetector_condition() fetches all the data i.e. name, conditions, etc
+    related to the subdetector name and conditions name, which User has requested for
+    
+    python [file_name] -ss [subdetector_name] -sc [condition_name]   
+    '''
     @staticmethod
     def show_subdetector_condition(searched_name, searched_condition):
         return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
+    '''
+    function show_subdetector_tag() fetches all the conditions that has a tag 
+    mentioned as an inut by the user.
+
+    python [file_name] -ss [subdetector_name] -st [tag_name]   
+    '''
     @staticmethod
     def show_subdetector_tag(searched_name, searched_tag):
 
@@ -56,6 +87,15 @@ class API(object):
 
         return found_tag
 
+
+    '''
+    function show_subdetector_iov() fetches all the conditions that has an IOV 
+    mentioned as an inut by the user. OR a user can also look between the range of
+    IOVs with two datetime's seperated by '-'
+
+    python [file_name] -ss [subdetector_name] -si [iov]   
+    python [file_name] -ss [subdetector_name] -si [iov-iov]
+    '''
     @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
 
@@ -94,6 +134,13 @@ class API(object):
 
         return found_conditions
 
+
+    '''
+    function show_subdetector_snapshot() fetches all the conditions that are for the
+    datetime provided by the user. It checks between since and until dates of the condition
+
+    python [file_name] -ss [subdetector_name] -sn [iov]
+    '''
     @staticmethod
     def show_subdetector_snapshot(searched_date):
 
@@ -113,6 +160,12 @@ class API(object):
 
         return found_snapshot
 
+
+    '''
+    function add_subdetector() adds a new subdetector or a json file mentioned by the user
+
+    python [file_name] -as [subdetector_name]
+    '''
     @staticmethod
     def add_subdetector(new_subdetector):
         try:
