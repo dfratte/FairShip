@@ -65,6 +65,7 @@ class Condition(EmbeddedDocument):
     since = ComplexDateTimeField(null=True)
     until = ComplexDateTimeField(null=True)
     source = ReferenceField(Source)
+    global_tag = ReferenceField(GlobalTag)
 
 
 class Subdetector(Document):
