@@ -72,26 +72,23 @@ class API(object):
         return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
     @staticmethod
-    def show_subdetector_tag(searched_name, searched_tag):
+    def show_subdetector_tag(subdetector_name, searched_tag):
         """
         function show_subdetector_tag() fetches all the conditions that has a tag
-        mentioned as an inut by the user.
+        mentioned as an input by the user.
 
         python [file_name] -ss [subdetector_name] -st [tag_name]
         """
-        if searched_name is not None:
-            return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag)
-
-        found_tag = []
+        if subdetector_name is not None and searched_tag is not None:
+            return API.show_subdetector_conditions(subdetector_name).filter(tag=searched_tag)
 
         for s in API.get_all_subdetectors():
             for c in s.conditions:
                 current_tag = c["tag"]
 
                 if searched_tag == current_tag:
-                    found_tag.append(c)
-
-        return found_tag
+                    return c
+        return None
 
     @staticmethod
     def show_subdetector_iov(searched_name, searched_iov):
