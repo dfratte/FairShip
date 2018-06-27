@@ -54,7 +54,7 @@ class Service(object):
                 if args.list_subdetectors:
                     print idx + 1, "-", s
                 else:
-                    Service.output(i)
+                    Service.output(s)
         else:
             Service.output(data)
             
@@ -107,7 +107,12 @@ class Service(object):
 
         group_lsn.add_argument('-ls', '--list-subdetectors',
                                dest='list_subdetectors',
-                               help='Lists all Subdetectors of the Conditions database.',
+                               help='Lists all Subdetectors from the Conditions database.',
+                               action="store_true")
+        
+        group_lsn.add_argument('-gas', '--get-all-subdetectors',
+                               dest='get_all_subdetectors',
+                               help='Get all Subdetectors from the Conditions database.',
                                action="store_true")
 
         group_lsn.add_argument('-ss', '--show-subdetector',
@@ -115,6 +120,12 @@ class Service(object):
                                default=None,
                                required=False,
                                help='Shows all the data related to a specific Subdetector.')
+        
+        group_lsn.add_argument('-as', '--add-subdetector',
+                               dest='new_sub',
+                               default=None,
+                               required=False,
+                               help='Adds a new Subdetector and its Conditions from a path to a JSON file.')
 
         group_ci.add_argument('-sc', '--show-condition',
                               dest='condition',
@@ -127,12 +138,6 @@ class Service(object):
                               default=None,
                               required=False,
                               help='Retrieves a list of Conditions based on a specific IOV or IOV range.')
-
-        group_lsn.add_argument('-as', '--add-subdetector',
-                               dest='new_sub',
-                               default=None,
-                               required=False,
-                               help='Adds a new Subdetector and its Conditions from a path to a JSON file.')
 
         group_ci.add_argument('-st', '--show-tag',
                               dest='tag',
@@ -157,7 +162,12 @@ class Service(object):
             parser.error('arguments error')
 
         if args.list_subdetectors is True:
-            subdetectors = api.list_subdetectors()
+            subdetectors_names = api.list_subdetectors()
+            self.result = subdetectors_names
+            self.is_list = True
+            
+        if args.get_all_subdetectors is True:
+            subdetectors = api.get_all_subdetectors()
             self.result = subdetectors
             self.is_list = True
 
