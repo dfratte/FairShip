@@ -2,9 +2,8 @@
 Generate dummy data
 """
 
-import random
-import string
 import datetime
+import random
 
 from classes.db_connect import DbConnect
 from models import Condition, Parameter, Subdetector, Source, GlobalTag
@@ -20,8 +19,7 @@ from models import Condition, Parameter, Subdetector, Source, GlobalTag
 #     return ''.join(random.choice(chars) for _ in range(size))
 
 def tag_generator(subdetector_name, condition_name):
-
-    return subdetector_name+'_'+condition_name+'_'+str(datetime.datetime.now())
+    return subdetector_name + '_' + condition_name + '_' + str(datetime.datetime.now())
 
 
 DbConnect.get_connection("conditionsDB1")
@@ -67,9 +65,9 @@ for s in subdetectors:
         since_date = datetime.datetime.now() - datetime.timedelta(days=7)
         until_date = datetime.datetime.now() + datetime.timedelta(days=until_days)
 
-        condition = Condition(name=c[0], iov=datetime.datetime.now(), tag=tag_generator(s,c[0]), since=since_date, until=until_date,
-                              source=sources_obj[random_index])
-        until_days +=1
+        condition = Condition(name=c[0], iov=datetime.datetime.now(), tag=tag_generator(s, c[0]), since=since_date,
+                              until=until_date, source=sources_obj[random_index])
+        until_days += 1
 
         params = c[1]
 
