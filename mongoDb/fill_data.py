@@ -23,7 +23,7 @@ def tag_generator(subdetector_name, condition_name):
 
     return subdetector_name+'_'+condition_name+'_'+str(datetime.datetime.now())
 
-DbConnect.delete_db("conditionsDB")
+# DbConnect.delete_db("conditionsDB")
 DbConnect.get_connection("conditionsDB")
 
 global_tags = ["Gain-June-26", "GlobalTemperature-Muon-ecal"]
