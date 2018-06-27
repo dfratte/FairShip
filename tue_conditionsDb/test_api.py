@@ -19,6 +19,9 @@ from models import Condition, Parameter, Source, Subdetector
 # Dummy condition for subdetector 1
 # @var CONDITION_2
 # Dummy condition for subdetector 1
+# @var CONDITION_3
+# Dummy condition for subdetector 1, with the same tag as CONDITION_2
+# TODO Add documentation for parameters
 API = API()
 
 SOURCE_1 = Source(name='Source_test_1')
@@ -29,7 +32,9 @@ SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
 CONDITION_1 = Condition(name='condition_test_1', iov=datetime.now(), tag='tag_test_1')
 PARAMETER_1 = Parameter(name='parameter_test_1', iov=datetime.now(), value='parameter_value_test_1')
 CONDITION_2 = Condition(name='condition_test_2', iov=datetime.now(), tag='tag_test_2')
+CONDITION_3 = Condition(name='condition_test_3', iov=datetime.now(), tag='tag_test_2')
 PARAMETER_2 = Parameter(name='parameter_test_2', iov=datetime.now(), value='parameter_value_test_2')
+PARAMETER_3 = Parameter(name='parameter_test_3', iov=datetime.now(), value='parameter_value_test_3')
 
 SUBDETECTOR_3 = Subdetector()
 
@@ -46,10 +51,12 @@ class TestApi(unittest.TestCase):
         SOURCE_1.save()
         CONDITION_1.parameters.append(PARAMETER_1)
         CONDITION_2.parameters.append(PARAMETER_2)
+        CONDITION_3.parameters.append(PARAMETER_3)
         CONDITION_1.source = SOURCE_1
         CONDITION_2.source = SOURCE_1
         SUBDETECTOR_1.conditions.append(CONDITION_1)
         SUBDETECTOR_1.conditions.append(CONDITION_2)
+        SUBDETECTOR_1.conditions.append(CONDITION_3)
         SUBDETECTOR_3 = SUBDETECTOR_1
         SUBDETECTOR_1.save()
         SUBDETECTOR_2.save()
@@ -60,12 +67,24 @@ class TestApi(unittest.TestCase):
         SUBDETECTOR_2.delete()
 
     def test_list_subdetectors(self):
-        """Method to evaluate if the list subdetector method is returning a collection of subdetectors.
-
-        This test does not verify the content of the returned list.
+        """
+        Method to evaluate if the list subdetector method is returning a list of subdetector names.
         """
         subdetectors = API.list_subdetectors()
+        self.assertGreaterEqual(subdetectors.count, 2)
+        self.assertTrue(isinstance(subdetectors[1], unicode))
+
+    def test_get_all_subdetectors(self):
+        """
+        Method to evaluate if the list subdetector method is returning a list of subdetectors.
+        This test does not verify the content of the returned list.
+        """
+        subdetectors = API.get_all_subdetectors()
         self.assertGreaterEqual(subdetectors.count(), 2)
+        self.assertIsNotNone(subdetectors[0].conditions)
+        self.assertIsNotNone(subdetectors[0].conditions[0].name)
+        self.assertIsNotNone(subdetectors[0].conditions[0].parameters)
+        self.assertIsNotNone(subdetectors[0].conditions[0].parameters[0].name)
 
     def test_show_subdetector(self):
         """
@@ -86,7 +105,7 @@ class TestApi(unittest.TestCase):
         Retrieve subdetector that has 2 conditions.
         """
         conditions = API.show_subdetector_conditions(SUBDETECTOR_1.name)
-        self.assertEqual(conditions.count(), 2)
+        self.assertEqual(conditions.count(), SUBDETECTOR_1.conditions.count())
 
     def test_show_subdetector_without_conditions(self):
         """
@@ -101,6 +120,10 @@ class TestApi(unittest.TestCase):
         """
         condition = API.show_subdetector_condition(SUBDETECTOR_1.name, CONDITION_1.name)
         self.assertEqual(condition.name, CONDITION_1.name)
+
+    def test_show_subdetector_tag(self):
+        # TODO implement this test
+        pass
 
     def test_show_subdetector_with_invalid_condition(self):
         """
