@@ -22,3 +22,12 @@ class DbConnect(object):
             host='localhost',
             port=27017
         )
+
+    @staticmethod
+    def delete_db(db_name):
+        """
+        Dalete the database of which name is provided.
+        :param db_name: The name of the database to delete.
+        """
+        db_connect = connect(db_name)
+        db_connect.drop_database(db_name)
