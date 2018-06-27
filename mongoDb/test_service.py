@@ -24,14 +24,14 @@ class TestCdbService(unittest.TestCase):
         json_data = json.loads(response.to_json())
         self.assertEqual(json_data["name"], 'Gain')
 
-#     def test_show_iov(self):
-#         response = self.service.run('-ss', 'Muon', '-si', '2018,06,21,17,26,38,437536')
-#         json_data = json.loads(response.to_json())
-#         self.assertEqual(json_data["iov"], '2018,06,21,17,26,38,437536')
+    #     def test_show_iov(self):
+    #         response = self.service.run('-ss', 'Muon', '-si', '2018,06,21,17,26,38,437536')
+    #         json_data = json.loads(response.to_json())
+    #         self.assertEqual(json_data["iov"], '2018,06,21,17,26,38,437536')
 
-#     def test_show_iov_range(self):
-#         response = self.service.run('-ss', 'Muon', '-si', '2018,06,21,17,26,38,437536-2018,06,21,17,26,38,442798')
-#         self.assertEqual(len(response), 3)
+    #     def test_show_iov_range(self):
+    #         response = self.service.run('-ss', 'Muon', '-si', '2018,06,21,17,26,38,437536-2018,06,21,17,26,38,442798')
+    #         self.assertEqual(len(response), 3)
 
     def test_list_subdetectors_conflict_ss(self):
         with self.assertRaises(BaseException):

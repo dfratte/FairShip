@@ -66,13 +66,12 @@ class Service(object):
             else:
                 Service.save(args.output_file, data.to_json(), 'w')
 
-
     @staticmethod
     def validate_arguments(args):
 
         list_sd_filter = [x for x in vars(args) if (x != 'list_subdetectors' and vars(args)[x] is not None)]
 
-        flag_ls = len(list_sd_filter) > 2 and args.list_subdetectors is True    #fixme: hardcoded value
+        flag_ls = len(list_sd_filter) > 2 and args.list_subdetectors is True  # fixme: hardcoded value
 
         show_cd_filter = [x for x in vars(args) if
                           (x != 'condition' and vars(args)[x] is not None and vars(args)[x] is not False)]
