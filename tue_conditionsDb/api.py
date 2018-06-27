@@ -25,16 +25,21 @@ class API(object):
     @staticmethod
     def list_subdetectors():
         """
-        function list_subdetectors() fetches all the subdetectors in the database from Subdetector colection 
-        
+        function list_subdetectors() fetches a list of names of the subdetectors in the database from Subdetector
+        collection
+
         python [file_name] -ls
         """
-
         return Subdetector.objects.values_list('name')
 
     @staticmethod
     def get_all_subdetectors():
-        return Subdetector.objects()
+        """
+        function get_all_subdetectors() fetches all the subdetectors in the database from Subdetector collection
+
+        python [file_name] -ls
+        """
+        return Subdetector.objects().all()
 
     @staticmethod
     def show_subdetector(searched_name):
@@ -77,10 +82,9 @@ class API(object):
         if searched_name is not None:
             return API.show_subdetector_conditions(searched_name).filter(tag=searched_tag)
 
-        subdetectors = Subdetector.objects.all()
         found_tag = []
 
-        for s in subdetectors:
+        for s in API.get_all_subdetectors():
             for c in s.conditions:
                 current_tag = c["tag"]
 
@@ -99,7 +103,7 @@ class API(object):
         python [file_name] -ss [subdetector_name] -si [iov]
         python [file_name] -ss [subdetector_name] -si [iov-iov]
         """
-        conditions = API.show_subdetector(searched_name).conditions
+        conditions = API.show_subdetector_conditions(searched_name)
 
         if "-" not in searched_iov:
 
@@ -129,7 +133,7 @@ class API(object):
 
             current_formatted_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
 
-            if current_formatted_iov >= start_iov and current_formatted_iov <= end_iov:
+            if start_iov <= current_formatted_iov <= end_iov:
                 found_conditions.append(c)
 
         return found_conditions
@@ -142,10 +146,9 @@ class API(object):
 
         python [file_name] -ss [subdetector_name] -sn [iov]
         """
-        subdetectors = Subdetector.objects.all()
         found_snapshot = []
 
-        for s in subdetectors:
+        for s in API.get_all_subdetectors():
             for c in s.conditions:
                 since_date = API.convert_date(c["since"])
                 until_date = API.convert_date(c["until"])
@@ -153,7 +156,7 @@ class API(object):
                 formatted_until_date = datetime.strptime(until_date, '%Y,%m,%d,%H,%M,%S,%f')
                 formatted_searched_date = API.convert_date(searched_date)
 
-                if formatted_searched_date >= formatted_since_date and formatted_searched_date <= formatted_until_date:
+                if formatted_since_date <= formatted_searched_date <= formatted_until_date:
                     found_snapshot.append(c)
 
         return found_snapshot
