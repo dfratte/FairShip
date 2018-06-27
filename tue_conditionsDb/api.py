@@ -6,7 +6,7 @@ from datetime import datetime
 from mongoengine import ComplexDateTimeField
 
 from classes.db_connect import DbConnect
-from models import Subdetector
+from models import Subdetector, GlobalTag
 
 
 class API(object):
@@ -136,16 +136,20 @@ class API(object):
         return found_conditions
 
     @staticmethod
-    def show_subdetector_snapshot(searched_date):
+    def get_snapshot(searched_date, gt_name):
         """
         function show_subdetector_snapshot() fetches all the conditions that are for the
         datetime provided by the user. It checks between since and until dates of the condition
 
-        python [file_name] -ss [subdetector_name] -sn [iov]
+        python [file_name] -sn [iov]
         """
+        subdetectors = Subdetector.objects.all()
         found_snapshot = []
 
-        for s in API.get_all_subdetectors():
+        if gt_name is not None:
+            GlobalTag(name=gt_name).save()
+
+        for s in subdetectors:
             for c in s.conditions:
                 since_date = API.convert_date(c["since"])
                 until_date = API.convert_date(c["until"])
@@ -154,7 +158,13 @@ class API(object):
                 formatted_searched_date = API.convert_date(searched_date)
 
                 if formatted_since_date <= formatted_searched_date <= formatted_until_date:
+
                     found_snapshot.append(c)
+
+                    if gt_name is not None:
+                        # print update global_tag field in condition
+                        c.global_tag = c["global_tag"]+","+gt_name
+                        c.save()
 
         return found_snapshot
 
