@@ -27,6 +27,11 @@ class API(object):
     
     python [file_name] -ls
     '''
+
+    @staticmethod
+    def name_subdetectors():
+        return Subdetector.objects.values_list('name')
+
     @staticmethod
     def list_subdetectors():
         return Subdetector.objects()
@@ -90,7 +95,7 @@ class API(object):
 
     '''
     function show_subdetector_iov() fetches all the conditions that has an IOV 
-    mentioned as an inut by the user. OR a user can also look between the range of
+    mentioned as an input by the user. OR a user can also look between the range of
     IOVs with two datetime's seperated by '-'
 
     python [file_name] -ss [subdetector_name] -si [iov]   
