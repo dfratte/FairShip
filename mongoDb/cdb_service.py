@@ -129,11 +129,6 @@ class Service(object):
                               required=False,
                               help='Retrieves a list of Conditions based on a specific tag.')
 
-        parser.add_argument('-v', '--verbose',
-                            dest='verbose',
-                            help='Prints out to the console the output of a command.',
-                            action="store_true")
-
         parser.add_argument('-f', '--file',
                             dest='output_file',
                             default=None,
@@ -154,9 +149,8 @@ class Service(object):
 
         if args.list_subdetectors is True:
             subdetectors = api.list_subdetectors()
-            if args.verbose:
-                for idx, s in enumerate(subdetectors):
-                    print idx + 1, "-", s["name"]
+            for idx, s in enumerate(subdetectors):
+                print idx + 1, "-", s["name"]
             if args.output_file:
                 self.save(args.output_file, subdetectors.to_json(), 'w')
             return subdetectors
@@ -164,8 +158,7 @@ class Service(object):
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
-            if args.verbose:
-                self.output(subdetector)
+            self.output(subdetector)
             if args.output_file:
                 self.save(args.output_file, subdetector.to_json(), 'w')
             return subdetector
@@ -173,8 +166,7 @@ class Service(object):
         if args.subdetector is not None and args.condition is not None and args.iov is None:
             print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
-            if args.verbose:
-                self.output(condition)
+            self.output(condition)
             if args.output_file:
                 self.save(args.output_file, condition.to_json(), 'w')
             return condition
@@ -183,14 +175,12 @@ class Service(object):
             print "-st executed"
             condition = api.show_subdetector_tag(args.subdetector, args.tag)
             if isinstance(condition, Condition):
-                if args.verbose:
-                    self.output(condition)
+                self.output(condition)
                 if args.output_file:
                     self.save(args.output_file, condition.to_json(), 'w')
             else:
-                if args.verbose:
-                    for i in condition:
-                        self.output(i)
+                for i in condition:
+                    self.output(i)
                 if args.output_file:
                     # for i in condition:
                     #     self.save(args.output_file, i.to_json(), 'a')
@@ -201,14 +191,12 @@ class Service(object):
             print "-si executed"
             iov = api.show_subdetector_iov(args.subdetector, args.iov)
             if not isinstance(iov, list):
-                if args.verbose:
-                    self.output(iov)
+                self.output(iov)
                 if args.output_file:
                     self.save(args.output_file, iov.to_json(), 'w')
             else:
-                if args.verbose:
-                    for i in iov:
-                        self.output(i)
+                for i in iov:
+                    self.output(i)
                 if args.output_file:
                     # for i in iov:
                     #     self.save(args.output_file, i.to_json(), 'a')
