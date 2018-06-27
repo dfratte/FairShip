@@ -29,5 +29,5 @@ class DbConnect(object):
         Dalete the database of which name is provided.
         :param db_name: The name of the database to delete.
         """
-        db_connect = DbConnect.get_connection(db_name)
+        db_connect = connect(db_name)
         db_connect.drop_database(db_name)
