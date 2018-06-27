@@ -43,7 +43,7 @@ def valid_date(s):
 class Service(object):
 
     @staticmethod
-    def save(file_name, data, mode):
+    def save(file_name, data, mode, ):
         with io.open(file_name, mode, encoding='utf-8') as f:
             f.write(unicode(data))
             print "Data exported successfully!"
@@ -52,6 +52,21 @@ class Service(object):
     def output(data):
         parsed = json.loads(data.to_json())
         print json.dumps(parsed, indent=4, sort_keys=True)
+
+    @staticmethod
+    def produce_output(data, args, is_list):
+        if args.verbose:
+            if is_list:
+                for i in data:
+                    Service.output(i)
+            else:
+                Service.output(data)
+        if args.output_file:
+            if is_list:
+                print "Unsupported data export."
+            else:
+                Service.save(args.output_file, data.to_json(), 'w')
+
 
     @staticmethod
     def validate_arguments(args):
@@ -152,77 +167,91 @@ class Service(object):
         if self.validate_arguments(args):
             parser.error('arguments error')
 
+        result = None
+        is_list = False
+
         if args.list_subdetectors is True:
             subdetectors = api.list_subdetectors()
             if args.verbose:
                 for idx, s in enumerate(subdetectors):
                     print idx + 1, "-", s["name"]
-            if args.output_file:
-                self.save(args.output_file, subdetectors.to_json(), 'w')
-            return subdetectors
+            # if args.output_file:
+            #     self.save(args.output_file, subdetectors.to_json(), 'w')
+            result = subdetectors
 
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
-            if args.verbose:
-                self.output(subdetector)
-            if args.output_file:
-                self.save(args.output_file, subdetector.to_json(), 'w')
-            return subdetector
+            # if args.verbose:
+            #     self.output(subdetector)
+            # if args.output_file:
+            #     self.save(args.output_file, subdetector.to_json(), 'w')
+            result = subdetector
 
         if args.subdetector is not None and args.condition is not None and args.iov is None:
             print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
-            if args.verbose:
-                self.output(condition)
-            if args.output_file:
-                self.save(args.output_file, condition.to_json(), 'w')
-            return condition
+            # if args.verbose:
+            #     self.output(condition)
+            # if args.output_file:
+            #     self.save(args.output_file, condition.to_json(), 'w')
+            result = condition
 
         if args.tag is not None:
             print "-st executed"
             condition = api.show_subdetector_tag(args.subdetector, args.tag)
-            if isinstance(condition, Condition):
-                if args.verbose:
-                    self.output(condition)
-                if args.output_file:
-                    self.save(args.output_file, condition.to_json(), 'w')
-            else:
-                if args.verbose:
-                    for i in condition:
-                        self.output(i)
-                if args.output_file:
-                    # for i in condition:
-                    #     self.save(args.output_file, i.to_json(), 'a')
-                    print "Unsupported data export!"
-            return condition
+            # if isinstance(condition, Condition):
+            #     if args.verbose:
+            #         self.output(condition)
+            #     if args.output_file:
+            #         self.save(args.output_file, condition.to_json(), 'w')
+            # else:
+            #     is_list = True
+            #     if args.verbose:
+            #         for i in condition:
+            #             self.output(i)
+            #     if args.output_file:
+            #         # for i in condition:
+            #         #     self.save(args.output_file, i.to_json(), 'a')
+            #         print "Unsupported data export!"
+            if not isinstance(condition, Condition):
+                is_list = True
+            result = condition
 
         if args.subdetector is not None and args.iov is not None:
             print "-si executed"
             iov = api.show_subdetector_iov(args.subdetector, args.iov)
-            if not isinstance(iov, list):
-                if args.verbose:
-                    self.output(iov)
-                if args.output_file:
-                    self.save(args.output_file, iov.to_json(), 'w')
-            else:
-                if args.verbose:
-                    for i in iov:
-                        self.output(i)
-                if args.output_file:
-                    # for i in iov:
-                    #     self.save(args.output_file, i.to_json(), 'a')
-                    print "Unsupported data export!"
-            return iov
+            # if not isinstance(iov, list):
+            #     if args.verbose:
+            #         self.output(iov)
+            #     if args.output_file:
+            #         self.save(args.output_file, iov.to_json(), 'w')
+            # else:
+            #     is_list = True
+            #     if args.verbose:
+            #         for i in iov:
+            #             self.output(i)
+            #     if args.output_file:
+            #         # for i in iov:
+            #         #     self.save(args.output_file, i.to_json(), 'a')
+            #         print "Unsupported data export!"
+            if isinstance(iov, list):
+                is_list = True
+            result = iov
 
         if args.new_sub is not None:
             print "-as executed"
             with open(args.new_sub) as loaded_file:
                 data = json.load(loaded_file)
-                result = api.add_subdetector(data)
-                print "Subdetector added successfully!" if (result == 1) else "Error adding new Subdetector"
+                added = api.add_subdetector(data)
+                if added == 1:
+                    print "Subdetector added successfully!"
+                    return True
+                print "Error adding new Subdetector"
+                return False
 
-        return True
+        self.produce_output(result, args, is_list)
+        return result
 
 
 if __name__ == '__main__':
