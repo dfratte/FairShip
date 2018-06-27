@@ -126,6 +126,12 @@ class Service(object):
                                default=None,
                                required=False,
                                help='Adds a new Subdetector and its Conditions from a path to a JSON file.')
+    
+        group_lsn.add_argument('-gs', '--get-snapshot',
+                               dest='get_snapshot',
+                               default=None,
+                               required=False,
+                               help='Gets a snapshot of Conditions based on a specific date.')
 
         group_ci.add_argument('-sc', '--show-condition',
                               dest='condition',
@@ -170,33 +176,34 @@ class Service(object):
             subdetectors = api.get_all_subdetectors()
             self.result = subdetectors
             self.is_list = True
+        
+        if args.get_snapshot is not None:
+            iov, tag_name = args.get_snapshot.split(" ")
+            snapshot = api.get_snapshot(iov, tag_name)
+            self.result = snapshot
+            self.is_list = True
 
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
-            print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)            
             self.result = subdetector
 
         if args.subdetector is not None and args.condition is not None and args.iov is None:
-            print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
             self.result = condition
 
         if args.tag is not None:
-            print "-st executed"
             condition = api.show_subdetector_tag(args.subdetector, args.tag)
             if not isinstance(condition, Condition):
                 self.is_list = True
             self.result = condition
 
         if args.subdetector is not None and args.iov is not None:
-            print "-si executed"
             iov = api.show_subdetector_iov(args.subdetector, args.iov)
             if isinstance(iov, list):
                 self.is_list = True
             self.result = iov
 
         if args.new_sub is not None:
-            print "-as executed"
             with open(args.new_sub) as loaded_file:
                 data = json.load(loaded_file)
                 added = api.add_subdetector(data)
