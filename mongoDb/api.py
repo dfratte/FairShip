@@ -95,6 +95,25 @@ class API(object):
         return found_conditions
 
     @staticmethod
+    def show_subdetector_snapshot(searched_date):
+
+        subdetectors = Subdetector.objects.all()
+        found_snapshot = []
+
+        for s in subdetectors:
+            for c in s.conditions:
+                since_date = API.convert_date(c["since"])
+                until_date = API.convert_date(c["until"])
+                formatted_since_date = datetime.strptime(since_date, '%Y,%m,%d,%H,%M,%S,%f')
+                formatted_until_date = datetime.strptime(until_date, '%Y,%m,%d,%H,%M,%S,%f')
+                formatted_searched_date = API.convert_date(searched_date)
+
+                if (formatted_searched_date >= formatted_since_date and formatted_searched_date <= formatted_until_date):
+                    found_snapshot.append(c)
+
+        return found_snapshot
+
+    @staticmethod
     def add_subdetector(new_subdetector):
         try:
             Subdetector(**new_subdetector).save()
