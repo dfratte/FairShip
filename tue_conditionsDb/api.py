@@ -3,7 +3,7 @@ ConditionsDB API
 """
 from datetime import datetime
 
-from mongoengine import ComplexDateTimeField
+from mongoengine import ComplexDateTimeField, FieldDoesNotExist
 
 from classes.db_connect import DbConnect
 from models import Subdetector, GlobalTag
@@ -80,7 +80,7 @@ class API(object):
         python [file_name] -ss [subdetector_name] -st [tag_name]
         """
         if subdetector_name is not None and searched_tag is not None:
-            return API.show_subdetector_conditions(subdetector_name).filter(tag=searched_tag)
+            return API.show_subdetector_conditions(subdetector_name).filter(tag=searched_tag).first()
 
         for s in API.get_all_subdetectors():
             for c in s.conditions:
@@ -177,7 +177,8 @@ class API(object):
         """
         try:
             Subdetector(**new_subdetector).save()
-        except ValueError:
+        except FieldDoesNotExist:
             return -1
-
+        except TypeError:
+            return -2
         return 1

@@ -48,7 +48,3 @@ class TestCdbService(unittest.TestCase):
     def test_show_iov_without_sd(self):
         with self.assertRaises(BaseException):
             self.service.run('-si', '1529542553180')
-
-
-if __name__ == '__main__':
-    unittest.main()

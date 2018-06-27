@@ -32,7 +32,7 @@ SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
 CONDITION_1 = Condition(name='condition_test_1', iov=datetime.now(), tag='tag_test_1')
 PARAMETER_1 = Parameter(name='parameter_test_1', iov=datetime.now(), value='parameter_value_test_1')
 CONDITION_2 = Condition(name='condition_test_2', iov=datetime.now(), tag='tag_test_2')
-CONDITION_3 = Condition(name='condition_test_3', iov=datetime.now(), tag='tag_test_2')
+CONDITION_3 = Condition(name='condition_test_3', iov=datetime.now(), tag='tag_test_3')
 PARAMETER_2 = Parameter(name='parameter_test_2', iov=datetime.now(), value='parameter_value_test_2')
 PARAMETER_3 = Parameter(name='parameter_test_3', iov=datetime.now(), value='parameter_value_test_3')
 
@@ -47,7 +47,6 @@ class TestApi(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         super(TestApi, cls).setUpClass()
-        # TODO use the correct method to add the information on database instead of add manually....
         SOURCE_1.save()
         CONDITION_1.parameters.append(PARAMETER_1)
         CONDITION_2.parameters.append(PARAMETER_2)
@@ -122,7 +121,17 @@ class TestApi(unittest.TestCase):
         self.assertEqual(condition.name, CONDITION_1.name)
 
     def test_show_subdetector_tag(self):
-        # TODO implement this test
+        condition = API.show_subdetector_tag(SUBDETECTOR_1.name, None)
+        self.assertIsNone(condition)
+        condition = API.show_subdetector_tag(None, CONDITION_3.tag)
+        self.assertEqual(condition.name, CONDITION_3.name)
+        condition = API.show_subdetector_tag(None, None)
+        self.assertIsNone(condition)
+        condition = API.show_subdetector_tag(SUBDETECTOR_1.name, CONDITION_3.tag)
+        self.assertEqual(condition.name, CONDITION_3.name)
+
+    def test_show_subdetector_iov(self):
+        # TODO implement it
         pass
 
     def test_show_subdetector_with_invalid_condition(self):
@@ -135,8 +144,15 @@ class TestApi(unittest.TestCase):
     def test_add_subdetector(self):
         """
         Add a subdetector to the database from json file.
+
+        Try to add an invalid loaded json into the database, which should raise a FieldDoesNotExist exception
+
+        Try to add an invalid json (in this case an empty string) into the database, which should raise a
+        TypeError exception
         """
         self.assertEqual(API.add_subdetector(json.loads(SUBDETECTOR_3.to_json())), 1)
+        self.assertEqual(-1, API.add_subdetector(json.loads('{"InvalidField":"InvalidValue"}')))
+        self.assertEqual(-2, API.add_subdetector(''))
 
     def test_convert_date(self):
         """
