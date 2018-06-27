@@ -29,11 +29,11 @@ class API(object):
     '''
 
     @staticmethod
-    def name_subdetectors():
+    def list_subdetectors():
         return Subdetector.objects.values_list('name')
 
     @staticmethod
-    def list_subdetectors():
+    def get_all_subdetectors():
         return Subdetector.objects()
 
     '''
