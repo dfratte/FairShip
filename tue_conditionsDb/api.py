@@ -148,34 +148,64 @@ class API(object):
         python [file_name] -gs "searched_date_string" [-gt "global_tag_name"]
         """
         found_snapshot = []
+        if searched_date_string not in (None, ''):
 
-        if gt_name is not None:
-            if not GlobalTag.objects(name=gt_name):
-                GlobalTag(name=gt_name).save()
+            if gt_name is not None:
+                if not GlobalTag.objects(name=gt_name):
+                    GlobalTag(name=gt_name).save()
+
+            for s in API.get_all_subdetectors():
+                for c in s.conditions:
+                    since_date = API.convert_date(c["since"])
+                    until_date = API.convert_date(c["until"])
+                    formatted_since_date = datetime.strptime(since_date, API.DATETIME_FORMAT)
+                    formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
+                    formatted_searched_date = API.convert_date(searched_date_string)
+
+                    if formatted_since_date <= formatted_searched_date <= formatted_until_date:
+
+                        found_snapshot.append(c)
+
+                        if gt_name is not None:
+                            prev_gt = c["global_tag"] if c["global_tag"] is not None else ""
+                            if prev_gt == "":
+                                c.global_tag = gt_name
+                            else:
+                                c.global_tag = prev_gt + "," + gt_name
+
+                            if gt_name + ',' not in prev_gt:
+                                c.save()
+
+        return found_snapshot
+
+    @staticmethod
+    def list_global_tags():
+        """
+        function list_globaltags() fetches a list of names of the Global Tags in the database from GlobalTag
+        collection
+
+        python [file_name] -lgt
+        """
+        return GlobalTag.objects.values_list('name')
+
+    @staticmethod
+    def get_data_global_tag(global_tag_name):
+        """
+        function get_data_global_tag() fetches all the conditions that are for the
+        tag name provided by the user.
+
+        python [file_name] -gtc "global_tag_name"
+        """
+        found_conditions = []
 
         for s in API.get_all_subdetectors():
             for c in s.conditions:
-                since_date = API.convert_date(c["since"])
-                until_date = API.convert_date(c["until"])
-                formatted_since_date = datetime.strptime(since_date, API.DATETIME_FORMAT)
-                formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
-                formatted_searched_date = API.convert_date(searched_date_string)
+                global_tag = c["global_tag"] if c["global_tag"] is not None else ""
 
-                if formatted_since_date <= formatted_searched_date <= formatted_until_date:
+                if global_tag_name + ',' in global_tag:
+                    found_conditions.append(c)
 
-                    found_snapshot.append(c)
-
-                    if gt_name is not None:
-                        prev_gt = c["global_tag"] if c["global_tag"] is not None else ""
-                        if prev_gt == "":
-                            c.global_tag = gt_name
-                        else:
-                            c.global_tag = prev_gt + "," + gt_name
-
-                        if gt_name + ',' not in prev_gt:
-                            c.save()
-
-        return found_snapshot
+        return found_conditions
 
     @staticmethod
     def add_subdetector(new_subdetector):

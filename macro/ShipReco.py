@@ -33,11 +33,24 @@ import rootUtils as ut
 import shipunit as u
 import shipRoot_conf
 
+
+# The following lines are used to import from a parent directory
+import inspect
+current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parent_dir = os.path.dirname(current_dir)
+sys.path.insert(0, parent_dir)
+
+
+from tue_conditionsDb import api
+
+# Create an instance of our ConditionsDB API
+conditionsDB_API = api.API()
+
 shipRoot_conf.configure()
 
 try:
-        opts, args = getopt.getopt(sys.argv[1:], "o:D:FHPu:n:f:g:c:hqv:sl:A:Y:i:",\
-           ["ecalDebugDraw","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0"])
+        opts, args = getopt.getopt(sys.argv[1:], "o:D:FHPu:n:f:g:c:hqv:sl:A:Y:i:t:",\
+           ["ecalDebugDraw","globalTag=","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0"])
 except getopt.GetoptError:
         # print help information and exit:
         print ' enter --inputFile=  --geoFile= --nEvents=  --firstEvent=,'
@@ -52,6 +65,11 @@ for o, a in opts:
             withNoStrawSmearing = True
         if o in ("--withT0",):
             withT0 = True
+        if o in ("-t", "--globalTag=", ):
+            globalTag = a
+            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
+            print conditionsDB_API.show_subdetector("Target Tracker").to_json()
+            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
         if o in ("-f", "--inputFile",):
             inputFile = a
         if o in ("-g", "--geoFile",):
