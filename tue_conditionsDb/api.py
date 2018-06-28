@@ -147,7 +147,8 @@ class API(object):
         found_snapshot = []
 
         if gt_name is not None:
-            GlobalTag(name=gt_name).save()
+            if not GlobalTag.objects(name=gt_name):
+                GlobalTag(name=gt_name).save()
 
         for s in subdetectors:
             for c in s.conditions:
@@ -161,10 +162,11 @@ class API(object):
 
                     found_snapshot.append(c)
 
-#                     if gt_name is not None:
-#                         # print update global_tag field in condition
-#                         c.global_tag = c["global_tag"]+","+gt_name
-#                         c.save()
+                    # if gt_name is not None:
+                    #     # print update global_tag field in condition
+                    #     # c.global_tag = c["global_tag"]+","+gt_name
+                    #     # c.save()
+                    #     return 0
 
         return found_snapshot
 
