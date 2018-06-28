@@ -169,7 +169,7 @@ class API(object):
                         if gt_name is not None:
                             prev_gt = c["global_tag"] if c["global_tag"] is not None else ""
                             if prev_gt == "":
-                                c.global_tag = gt_name
+                                c.global_tag = gt_name + ","
                             else:
                                 c.global_tag = prev_gt + "," + gt_name
 
