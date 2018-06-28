@@ -3,7 +3,7 @@ Unittest developed to guarantee the api integrity
 """
 import json
 import unittest
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from api import API
 from models import Condition, Parameter, Source, Subdetector
@@ -29,10 +29,28 @@ SOURCE_1 = Source(name='Source_test_1')
 SUBDETECTOR_1 = Subdetector(name='subdetector_test_1')
 SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
 
-CONDITION_1 = Condition(name='condition_test_1', iov=datetime.now(), tag='tag_test_1')
+CONDITION_1 = Condition(
+    name='condition_test_1',
+    iov=datetime.now(),
+    since=datetime.now() - timedelta(days=1),
+    until=datetime.now() + timedelta(days=1),
+    tag='tag_test_1'
+)
+CONDITION_2 = Condition(
+    name='condition_test_2',
+    iov=datetime.now(),
+    since=datetime.now() - timedelta(days=1),
+    until=datetime.now() + timedelta(days=1),
+    tag='tag_test_2'
+)
+CONDITION_3 = Condition(
+    name='condition_test_3',
+    iov=datetime.now(),
+    since=datetime.now() - timedelta(days=2),
+    until=datetime.now() - timedelta(days=1),
+    tag='tag_test_3'
+)
 PARAMETER_1 = Parameter(name='parameter_test_1', iov=datetime.now(), value='parameter_value_test_1')
-CONDITION_2 = Condition(name='condition_test_2', iov=datetime.now(), tag='tag_test_2')
-CONDITION_3 = Condition(name='condition_test_3', iov=datetime.now(), tag='tag_test_3')
 PARAMETER_2 = Parameter(name='parameter_test_2', iov=datetime.now(), value='parameter_value_test_2')
 PARAMETER_3 = Parameter(name='parameter_test_3', iov=datetime.now(), value='parameter_value_test_3')
 
@@ -121,6 +139,9 @@ class TestApi(unittest.TestCase):
         self.assertEqual(condition.name, CONDITION_1.name)
 
     def test_show_subdetector_tag(self):
+        """
+        Test the retrieval of conditions based on tags
+        """
         condition = API.show_subdetector_tag(SUBDETECTOR_1.name, None)
         self.assertIsNone(condition)
         condition = API.show_subdetector_tag(None, CONDITION_3.tag)
@@ -133,6 +154,14 @@ class TestApi(unittest.TestCase):
     def test_show_subdetector_iov(self):
         # TODO implement it
         pass
+
+    def test_get_snapshot(self):
+        """
+        Retrieval of a snapshot of conditions based on a datetime. The get_snapshot function
+        receives a datetime in the form of a string, formatted in the API.DATETIME_FORMAT way.
+        """
+        conditions_list = API.get_snapshot(API.convert_date(datetime.now()), None)
+        self.assertEqual(len(conditions_list), 2)
 
     def test_show_subdetector_with_invalid_condition(self):
         """

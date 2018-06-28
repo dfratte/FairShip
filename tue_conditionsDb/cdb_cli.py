@@ -4,7 +4,6 @@ ConditionsDB Command Line Interface
 import argparse
 import io
 import json
-from datetime import datetime
 
 from api import API
 from models import Condition
@@ -31,7 +30,8 @@ Generation 2017
 This script is used to retrieve condition data from a condition database.
 '''
 
-class Service(object):
+
+class CLI(object):
 
     def __init__(self):
         self.result = None
@@ -56,15 +56,15 @@ class Service(object):
                 elif args.get_snapshot:
                     print s["until"]
                 else:
-                    Service.output(s)
+                    CLI.output(s)
         else:
-            Service.output(data)
-            
+            CLI.output(data)
+
         if args.output_file:
             if self.is_list:
                 print "Unsupported data export."
             else:
-                Service.save(args.output_file, data.to_json(), 'w')
+                CLI.save(args.output_file, data.to_json(), 'w')
 
     @staticmethod
     def validate_arguments(args):
@@ -111,7 +111,7 @@ class Service(object):
                                dest='list_subdetectors',
                                help='Lists all Subdetectors from the Conditions database.',
                                action="store_true")
-        
+
         group_lsn.add_argument('-gas', '--get-all-subdetectors',
                                dest='get_all_subdetectors',
                                help='Get all Subdetectors from the Conditions database.',
@@ -122,13 +122,13 @@ class Service(object):
                                default=None,
                                required=False,
                                help='Shows all the data related to a specific Subdetector.')
-        
+
         group_lsn.add_argument('-as', '--add-subdetector',
                                dest='new_sub',
                                default=None,
                                required=False,
                                help='Adds a new Subdetector and its Conditions from a path to a JSON file.')
-    
+
         group_lsn.add_argument('-gs', '--get-snapshot',
                                dest='get_snapshot',
                                default=None,
@@ -146,7 +146,7 @@ class Service(object):
                               default=None,
                               required=False,
                               help='Retrieves a list of Conditions based on a specific IOV or IOV range.')
-        
+
         group_ci.add_argument('-gt', '--global-tag',
                               dest='global_tag',
                               default=None,
@@ -179,20 +179,20 @@ class Service(object):
             subdetectors_names = api.list_subdetectors()
             self.result = subdetectors_names
             self.is_list = True
-            
+
         if args.get_all_subdetectors is True:
             subdetectors = api.get_all_subdetectors()
             self.result = subdetectors
             self.is_list = True
-        
+
         if args.get_snapshot is not None:
-#             iov, tag_name = args.get_snapshot.split(" ")
+            #             iov, tag_name = args.get_snapshot.split(" ")
             snapshot = api.get_snapshot(args.get_snapshot, args.global_tag)
             self.result = snapshot
             self.is_list = True
 
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
-            subdetector = api.show_subdetector(args.subdetector)            
+            subdetector = api.show_subdetector(args.subdetector)
             self.result = subdetector
 
         if args.subdetector is not None and args.condition is not None and args.iov is None:
@@ -222,10 +222,10 @@ class Service(object):
                 return False
 
         self.produce_output(self.result, args, self.is_list)
-        
+
         return self.result
 
 
 if __name__ == '__main__':
-    service = Service()
+    service = CLI()
     service.run()
