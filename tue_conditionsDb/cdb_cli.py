@@ -92,7 +92,10 @@ class CLI(object):
 
         flag_add_sub = len(add_sub_filter) != 0 and args.new_sub is not None
 
-        if flag_ls or flag_cd or flag_iov or flag_add_sub:
+        flag_gt = [x for x in vars(args) if
+                          (x == 'global_tag' and vars(args)[x] is not None and vars(args)["get_snapshot"] is None)]
+        
+        if flag_ls or flag_cd or flag_iov or flag_add_sub or flag_gt:
             return True
 
         return False
