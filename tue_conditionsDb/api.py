@@ -162,11 +162,15 @@ class API(object):
 
                     found_snapshot.append(c)
 
-                    # if gt_name is not None:
-                    #     # print update global_tag field in condition
-                    #     # c.global_tag = c["global_tag"]+","+gt_name
-                    #     # c.save()
-                    #     return 0
+                    if gt_name is not None:
+                        prev_gt = c["global_tag"] if c["global_tag"] is not None else ""
+                        if prev_gt == "":
+                            c.global_tag = gt_name
+                        else:
+                            c.global_tag = prev_gt + "," + gt_name
+
+                        if gt_name + ',' not in prev_gt:
+                            c.save()
 
         return found_snapshot
 
