@@ -10,6 +10,10 @@ from models import Subdetector, GlobalTag
 
 
 class API(object):
+    ##
+    # @var DATETIME_FORMAT
+    # Masked used to format datetime
+    DATETIME_FORMAT = '%Y,%m,%d,%H,%M,%S,%f'
 
     def __init__(self):
         DbConnect.get_connection('conditionsDB')
@@ -110,7 +114,7 @@ class API(object):
 
                 formatted_searched_iov = API.convert_date(searched_iov)
 
-                formatted_current_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
+                formatted_current_iov = datetime.strptime(current_iov_datetime, API.DATETIME_FORMAT)
 
                 if formatted_current_iov == formatted_searched_iov:
                     return c
@@ -128,7 +132,7 @@ class API(object):
 
             current_iov_datetime = API.convert_date(c["iov"])
 
-            current_formatted_iov = datetime.strptime(current_iov_datetime, '%Y,%m,%d,%H,%M,%S,%f')
+            current_formatted_iov = datetime.strptime(current_iov_datetime, API.DATETIME_FORMAT)
 
             if start_iov <= current_formatted_iov <= end_iov:
                 found_conditions.append(c)
@@ -143,30 +147,23 @@ class API(object):
 
         python [file_name] -sn [iov]
         """
-        subdetectors = Subdetector.objects.all()
         found_snapshot = []
 
         if gt_name is not None:
             if not GlobalTag.objects(name=gt_name):
                 GlobalTag(name=gt_name).save()
 
-        for s in subdetectors:
+        for s in API.get_all_subdetectors():
             for c in s.conditions:
                 since_date = API.convert_date(c["since"])
                 until_date = API.convert_date(c["until"])
-                formatted_since_date = datetime.strptime(since_date, '%Y,%m,%d,%H,%M,%S,%f')
-                formatted_until_date = datetime.strptime(until_date, '%Y,%m,%d,%H,%M,%S,%f')
+                formatted_since_date = datetime.strptime(since_date, API.DATETIME_FORMAT)
+                formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
                 formatted_searched_date = API.convert_date(searched_date)
 
                 if formatted_since_date <= formatted_searched_date <= formatted_until_date:
 
                     found_snapshot.append(c)
-
-                    # if gt_name is not None:
-                    #     # print update global_tag field in condition
-                    #     # c.global_tag = c["global_tag"]+","+gt_name
-                    #     # c.save()
-                    #     return 0
 
         return found_snapshot
 

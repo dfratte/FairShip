@@ -159,6 +159,6 @@ class TestApi(unittest.TestCase):
         Test the convert date function
         """
         date = datetime.now()
-        self.assertEqual(API.convert_date(date), date.strftime('%Y,%m,%d,%H,%M,%S,%f'))
-        self.assertEqual(API.convert_date(date.strftime('%Y,%m,%d,%H,%M,%S,%f')), date)
+        self.assertEqual(API.convert_date(date), date.strftime(API.DATETIME_FORMAT))
+        self.assertEqual(API.convert_date(date.strftime(API.DATETIME_FORMAT)), date)
         self.assertEqual(API.convert_date(1), None)
