@@ -187,6 +187,24 @@ class API(object):
         """
         return GlobalTag.objects.values_list('name')
 
+    @staticmethod
+    def get_data_global_tag(global_tag_name):
+        """
+        function get_data_global_tag() fetches all the conditions that are for the
+        tag name provided by the user.
+
+        python [file_name] -gtc "global_tag_name"
+        """
+        found_conditions = []
+
+        for s in API.get_all_subdetectors():
+            for c in s.conditions:
+                global_tag = c["global_tag"] if c["global_tag"] is not None else ""
+
+                if global_tag_name + ',' in global_tag:
+                    found_conditions.append(c)
+
+        return found_conditions
 
     @staticmethod
     def add_subdetector(new_subdetector):
