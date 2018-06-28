@@ -1,3 +1,7 @@
+"""@package tue_conditionsDb
+Test the cdb CLI
+"""
+
 import json
 import unittest
 

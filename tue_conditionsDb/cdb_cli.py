@@ -6,7 +6,7 @@ import io
 import json
 
 from api import API
-from errors import errors
+from resources.errors import errors
 from models import Condition
 
 HELP_DESC = '''

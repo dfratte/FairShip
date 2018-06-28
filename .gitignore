@@ -56,6 +56,5 @@ build/
 */__init__.py
 
 # Doxygen
-/tue_conditionsDb/html
-/tue_conditionsDb/latex
+/tue_conditionsDb/doxygen
 */.st2017_ship_conddb_doxygen.conf
