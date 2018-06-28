@@ -1,4 +1,4 @@
-"""@package mongoDb
+"""@package tue_conditionsDb
 Database connection class
 """
 from mongoengine import connect

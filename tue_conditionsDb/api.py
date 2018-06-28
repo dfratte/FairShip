@@ -1,4 +1,4 @@
-"""@package mongoDb
+"""@package tue_conditionsDb
 ConditionsDB API
 """
 from datetime import datetime
@@ -10,6 +10,9 @@ from models import Subdetector, GlobalTag
 
 
 class API(object):
+    """
+    TODO: Document it
+    """
     ##
     # @var DATETIME_FORMAT
     # Masked used to format datetime
@@ -20,6 +23,9 @@ class API(object):
 
     @staticmethod
     def convert_date(date):
+        """
+        TODO: Document it
+        """
         if isinstance(date, datetime):
             return ComplexDateTimeField()._convert_from_datetime(date)
         elif isinstance(date, str):
@@ -148,33 +154,34 @@ class API(object):
         python [file_name] -gs "searched_date_string" [-gt "global_tag_name"]
         """
         found_snapshot = []
-        if searched_date_string not in (None, ''):
+        if searched_date_string in (None, ''):
+            return found_snapshot
 
-            if gt_name is not None:
-                if not GlobalTag.objects(name=gt_name):
-                    GlobalTag(name=gt_name).save()
+        if gt_name is not None:
+            if not GlobalTag.objects(name=gt_name):
+                GlobalTag(name=gt_name).save()
 
-            for s in API.get_all_subdetectors():
-                for c in s.conditions:
-                    since_date = API.convert_date(c["since"])
-                    until_date = API.convert_date(c["until"])
-                    formatted_since_date = datetime.strptime(since_date, API.DATETIME_FORMAT)
-                    formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
-                    formatted_searched_date = API.convert_date(searched_date_string)
+        for s in API.get_all_subdetectors():
+            for c in s.conditions:
+                since_date = API.convert_date(c["since"])
+                until_date = API.convert_date(c["until"])
+                formatted_since_date = datetime.strptime(since_date, API.DATETIME_FORMAT)
+                formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
+                formatted_searched_date = API.convert_date(searched_date_string)
 
-                    if formatted_since_date <= formatted_searched_date <= formatted_until_date:
+                if formatted_since_date <= formatted_searched_date <= formatted_until_date:
 
-                        found_snapshot.append(c)
+                    found_snapshot.append(c)
 
-                        if gt_name is not None:
-                            prev_gt = c["global_tag"] if c["global_tag"] is not None else ""
-                            if prev_gt == "":
-                                c.global_tag = gt_name + ","
-                            else:
-                                c.global_tag = prev_gt + "," + gt_name
+                    if gt_name is not None:
+                        prev_gt = c["global_tag"] if c["global_tag"] is not None else ""
+                        if prev_gt == "":
+                            c.global_tag = gt_name + ","
+                        else:
+                            c.global_tag = prev_gt + "," + gt_name
 
-                            if gt_name + ',' not in prev_gt:
-                                c.save()
+                        if gt_name + ',' not in prev_gt:
+                            c.save()
 
         return found_snapshot
 

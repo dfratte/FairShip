@@ -1,4 +1,4 @@
-"""@package mongoDb
+"""@package tue_conditionsDb
 Generate dummy data
 """
 
@@ -19,6 +19,12 @@ from models import Condition, Parameter, Subdetector, Source, GlobalTag
 #     return ''.join(random.choice(chars) for _ in range(size))
 
 def tag_generator(subdetector_name, condition_name):
+    """
+    Generates a tag from the name of the subdetector, the condition and the current daytime
+    :param subdetector_name: Name of subdetector (string)
+    :param condition_name: Name of condition (string)
+    :return: The name of the tag (e.g. Muon_Alignment_2018-06-28 15:52:54.108437)
+    """
     return subdetector_name + '_' + condition_name + '_' + str(datetime.datetime.now())
 
 

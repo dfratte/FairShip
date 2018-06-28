@@ -11,6 +11,12 @@ from models import Condition, Parameter, Source, Subdetector, GlobalTag
 ##
 # @var API
 # Instance of API class to be tested
+# @var SOURCE_1
+# Dummy source
+# @var GLOBAL_TAG_1
+# Dummy global tag 1
+# @var GLOBAL_TAG_2
+# Dummy dummy global tag 2
 # @var SUBDETECTOR_1
 # Dummy subdetector 1 with 2 conditions
 # @var SUBDETECTOR_2
@@ -21,7 +27,16 @@ from models import Condition, Parameter, Source, Subdetector, GlobalTag
 # Dummy condition for subdetector 1
 # @var CONDITION_3
 # Dummy condition for subdetector 1, with the same tag as CONDITION_2
-# TODO Add documentation for parameters
+# @var CONDITION_4
+# Dummy condition for subdetector 3
+# @var PARAMETER_1
+# Dummy parameter for condition 1
+# @var PARAMETER_2
+# Dummy parameter for condition 2
+# @var PARAMETER_3
+# Dummy parameter for condition 3
+# @var PARAMETER_4
+# Dummy parameter for condition 4
 API = API()
 
 SOURCE_1 = Source(name='Source_test_1')
@@ -167,10 +182,6 @@ class TestApi(unittest.TestCase):
         condition = API.show_subdetector_tag(SUBDETECTOR_1.name, CONDITION_3.tag)
         self.assertEqual(condition.name, CONDITION_3.name)
 
-    def test_show_subdetector_iov(self):
-        # TODO implement it
-        pass
-
     def test_get_snapshot(self):
         """
         Retrieval of a snapshot of conditions based on a datetime. The get_snapshot function
@@ -210,7 +221,7 @@ class TestApi(unittest.TestCase):
         Retrieval of conditions based on a global tag
         """
         # We need to call get_snapshot first to create the global tag
-        a = API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
         conditions_list = API.get_data_global_tag(GLOBAL_TAG_2.name)
         self.assertEqual(len(conditions_list), 2)
 

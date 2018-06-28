@@ -1,4 +1,4 @@
-"""@package mongoDb
+"""@package tue_conditionsDb
 MongoDb Models
 """
 from mongoengine import Document, EmbeddedDocument, EmbeddedDocumentListField, StringField, ComplexDateTimeField, \
@@ -15,6 +15,7 @@ class GlobalTag(Document):
     # @var name
     # Name of the Global Tag
     name = StringField(max_length=1000, null=True)
+
 
 class Source(Document):
     """
