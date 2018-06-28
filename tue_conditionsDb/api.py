@@ -178,6 +178,17 @@ class API(object):
         return found_snapshot
 
     @staticmethod
+    def list_globaltags():
+        """
+        function list_globaltags() fetches a list of names of the Global Tags in the database from GlobalTag
+        collection
+
+        python [file_name] -lgt
+        """
+        return GlobalTag.objects.values_list('name')
+
+
+    @staticmethod
     def add_subdetector(new_subdetector):
         """
         function add_subdetector() adds a new subdetector or a json file mentioned by the user
