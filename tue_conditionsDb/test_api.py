@@ -6,7 +6,7 @@ import unittest
 from datetime import datetime, timedelta
 
 from api import API
-from models import Condition, Parameter, Source, Subdetector
+from models import Condition, Parameter, Source, Subdetector, GlobalTag
 
 ##
 # @var API
@@ -25,6 +25,7 @@ from models import Condition, Parameter, Source, Subdetector
 API = API()
 
 SOURCE_1 = Source(name='Source_test_1')
+GLOBAL_TAG_1 = GlobalTag(name='GlobalTag_test_1')
 
 SUBDETECTOR_1 = Subdetector(name='subdetector_test_1')
 SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
@@ -159,9 +160,19 @@ class TestApi(unittest.TestCase):
         """
         Retrieval of a snapshot of conditions based on a datetime. The get_snapshot function
         receives a datetime in the form of a string, formatted in the API.DATETIME_FORMAT way.
+
+        This function also tests the ability of get_snapshot to add global tags into the database.
         """
         conditions_list = API.get_snapshot(API.convert_date(datetime.now()), None)
         self.assertEqual(len(conditions_list), 2)
+        conditions_list = API.get_snapshot(API.convert_date(datetime.now() + timedelta(weeks=5)), None)
+        self.assertEqual(len(conditions_list), 0)
+        conditions_list = API.get_snapshot('', None)
+        self.assertEqual(conditions_list, [])
+        # Test the functionality of the insertion of a global tag into the database.
+        # This test is placed here because this functionality is covered by get_snapshot.
+        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_1.name)
+        self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_1.name).count(), 1)
 
     def test_show_subdetector_with_invalid_condition(self):
         """
