@@ -10,24 +10,31 @@ class DbConnect(object):
     """
 
     @staticmethod
-    def get_connection(db_name):
+    def get_connection(connection_dict):
         """
         Create an instance of the database connection.
-        :param db_name: The name of the database to connect to.
+        :param connection_dict: Dict containinig all the information to make a connection.
         """
         connect(
-            db=db_name,
-            # user=user,
-            # password=password,
-            host='localhost',
-            port=27017
+            db=connection_dict['db_name'],
+#             user=user,
+#             password=password,
+            host=connection_dict['host'],
+            port=connection_dict['port']
         )
 
     @staticmethod
-    def delete_db(db_name):
+    def delete_db(connection_dict):
         """
         Dalete the database of which name is provided.
-        :param db_name: The name of the database to delete.
+        :param connection_dict: Dict containinig all the information to make a connection.
         """
-        db_connect = connect(db_name)
-        db_connect.drop_database(db_name)
+        db_connect = connect(
+            db=connection_dict['db_name'],
+#             user=user,
+#             password=password,
+            host=connection_dict['host'],
+            port=connection_dict['port']
+        )
+        
+        db_connect.drop_database(connection_dict['db_name'])

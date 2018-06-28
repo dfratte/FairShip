@@ -2,12 +2,11 @@
 ConditionsDB API
 """
 from datetime import datetime
-
 from mongoengine import ComplexDateTimeField, FieldDoesNotExist
-
 from classes.db_connect import DbConnect
 from models import Subdetector, GlobalTag
 
+connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port':27017}
 
 class API(object):
     ##
@@ -16,7 +15,8 @@ class API(object):
     DATETIME_FORMAT = '%Y,%m,%d,%H,%M,%S,%f'
 
     def __init__(self):
-        DbConnect.get_connection('conditionsDB')
+        #TODO: pass a connection_dict as argument to connect remotely to another server
+        DbConnect.get_connection(connection_dict)
 
     @staticmethod
     def convert_date(date):
@@ -93,51 +93,6 @@ class API(object):
                 if searched_tag == current_tag:
                     return c
         return None
-
-    @staticmethod
-    def show_subdetector_iov(searched_name, searched_iov):
-        """
-        function show_subdetector_iov() fetches all the conditions that has an IOV
-        mentioned as an input by the user. OR a user can also look between the range of
-        IOVs with two datetime's seperated by '-'
-
-        python [file_name] -ss "subdetector_name" -si "datetime"
-        python [file_name] -ss "subdetector_name" -si "datetime_from-datetime_to"
-        """
-        conditions = API.show_subdetector_conditions(searched_name)
-
-        if "-" not in searched_iov:
-
-            for c in conditions:
-
-                current_iov_datetime = API.convert_date(c["iov"])
-
-                formatted_searched_iov = API.convert_date(searched_iov)
-
-                formatted_current_iov = datetime.strptime(current_iov_datetime, API.DATETIME_FORMAT)
-
-                if formatted_current_iov == formatted_searched_iov:
-                    return c
-            return None
-
-        found_conditions = []
-
-        start, end = searched_iov.split("-")
-
-        start_iov = API.convert_date(start)
-
-        end_iov = API.convert_date(end)
-
-        for c in conditions:
-
-            current_iov_datetime = API.convert_date(c["iov"])
-
-            current_formatted_iov = datetime.strptime(current_iov_datetime, API.DATETIME_FORMAT)
-
-            if start_iov <= current_formatted_iov <= end_iov:
-                found_conditions.append(c)
-
-        return found_conditions
 
     @staticmethod
     def get_snapshot(searched_date_string, gt_name):

@@ -21,9 +21,10 @@ from models import Condition, Parameter, Subdetector, Source, GlobalTag
 def tag_generator(subdetector_name, condition_name):
     return subdetector_name + '_' + condition_name + '_' + str(datetime.datetime.now())
 
+connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port':27017}
 
-DbConnect.delete_db("conditionsDB")
-DbConnect.get_connection("conditionsDB")
+DbConnect.delete_db(connection_dict)
+DbConnect.get_connection(connection_dict)
 
 global_tags = ["Gain-June-26", "GlobalTemperature-Muon-ecal"]
 
@@ -66,14 +67,14 @@ for s in subdetectors:
         since_date = datetime.datetime.now() - datetime.timedelta(days=7)
         until_date = datetime.datetime.now() + datetime.timedelta(days=until_days)
 
-        condition = Condition(name=c[0], iov=datetime.datetime.now(), tag=tag_generator(s, c[0]), since=since_date,
+        condition = Condition(name=c[0], tag=tag_generator(s, c[0]), since=since_date,
                               until=until_date, source=sources_obj[random_index])
         until_days += 1
 
         params = c[1]
 
         for p in params:
-            condition.parameters.append(Parameter(name=p[0], value=p[1], iov=datetime.datetime.now()))
+            condition.parameters.append(Parameter(name=p[0], value=p[1]))
 
         sub.conditions.append(condition)
 

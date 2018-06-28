@@ -38,7 +38,6 @@ class Parameter(EmbeddedDocument):
     # @var value
     # Value of the Parameter
     name = StringField(max_length=1000, null=True)
-    iov = ComplexDateTimeField(null=True)
     value = StringField(max_length=1000, null=True)
 
 
@@ -59,7 +58,6 @@ class Condition(EmbeddedDocument):
     # @var source
     # Source used to group Conditions
     name = StringField(max_length=1000, null=True)
-    iov = ComplexDateTimeField(null=True)
     tag = StringField(max_length=1000, null=True)
     parameters = EmbeddedDocumentListField(Parameter)
     since = ComplexDateTimeField(null=True)

@@ -82,17 +82,17 @@ class CLI(object):
 
         flag_cd = len(show_cd_filter) == 0 and args.condition is not None
 
-        show_iov_filter = [x for x in vars(args) if
-                           (x != 'iov' and vars(args)[x] is not None and vars(args)[x] is not False)]
-
-        flag_iov = len(show_iov_filter) == 0 and args.iov is not None
-
         add_sub_filter = [x for x in vars(args) if
                           (x != 'new_sub' and vars(args)[x] is not None and vars(args)[x] is not False)]
 
         flag_add_sub = len(add_sub_filter) != 0 and args.new_sub is not None
 
-        if flag_ls or flag_cd or flag_iov or flag_add_sub:
+        output_file_filter = [x for x in vars(args) if 
+                              (x != 'output_file' and vars(args)[x] is not None and vars(args)[x] is not False)]
+        
+        flag_f = len(output_file_filter) == 0 and args.output_file is not None
+        
+        if flag_ls or flag_cd or flag_add_sub or flag_f:
             return True
 
         return False
@@ -107,7 +107,7 @@ class CLI(object):
 
         group_lsn = parser.add_mutually_exclusive_group()
 
-        # mutually exclusive group for show condition and show iov
+        # mutually exclusive group for show condition
 
         group_ci = parser.add_mutually_exclusive_group()
 
@@ -150,12 +150,6 @@ class CLI(object):
                               required=False,
                               help='Shows a specific Condition of a Subdetector. Search is done by Condition name.')
 
-        group_ci.add_argument('-si', '--show-iov',
-                              dest='iov',
-                              default=None,
-                              required=False,
-                              help='Retrieves a list of Conditions based on a specific IOV or IOV range.')
-
         group_ci.add_argument('-gt', '--global-tag',
                               dest='global_tag',
                               default=None,
@@ -196,7 +190,7 @@ class CLI(object):
             self.result = subdetectors
             self.is_list = True
         
-        if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
+        if args.subdetector is not None and args.condition is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
             if subdetector is None:
@@ -226,19 +220,12 @@ class CLI(object):
             self.result = global_tags_names
             self.is_list = True
 
-        if args.subdetector is not None and args.condition is not None and args.iov is None:
+        if args.subdetector is not None and args.condition is not None:
             print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
             if condition is None:
                 self.error = "error "+errors.keys()[1]+": "+errors["0002"]
             self.result = condition
-
-        if args.subdetector is not None and args.iov is not None:
-            print "-si executed"
-            iov = api.show_subdetector_iov(args.subdetector, args.iov)
-            if isinstance(iov, list):
-                self.is_list = True
-            self.result = iov
 
         if args.global_tag is not None and args.get_snapshot is None:
             print "-gt executed"
