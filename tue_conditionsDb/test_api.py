@@ -26,6 +26,7 @@ API = API()
 
 SOURCE_1 = Source(name='Source_test_1')
 GLOBAL_TAG_1 = GlobalTag(name='GlobalTag_test_1')
+GLOBAL_TAG_2 = GlobalTag(name='GlobalTag_test_2')
 
 SUBDETECTOR_1 = Subdetector(name='subdetector_test_1')
 SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
@@ -78,11 +79,15 @@ class TestApi(unittest.TestCase):
         SUBDETECTOR_3 = SUBDETECTOR_1
         SUBDETECTOR_1.save()
         SUBDETECTOR_2.save()
+        GLOBAL_TAG_1.save()
 
     @classmethod
     def tearDownClass(cls):
+        SOURCE_1.delete()
         SUBDETECTOR_1.delete()
         SUBDETECTOR_2.delete()
+        GLOBAL_TAG_1.delete()
+        GlobalTag.objects(name=GLOBAL_TAG_2.name).delete()
 
     def test_list_subdetectors(self):
         """
@@ -171,8 +176,17 @@ class TestApi(unittest.TestCase):
         self.assertEqual(conditions_list, [])
         # Test the functionality of the insertion of a global tag into the database.
         # This test is placed here because this functionality is covered by get_snapshot.
+        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_2.name).count(), 1)
         API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_1.name)
         self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_1.name).count(), 1)
+
+    def list_global_tags(self):
+        """
+        Retrieval of all global tags.
+        """
+        global_tag_list = API.list_global_tags()
+        self.assertGreaterEqual(len(global_tag_list), 1)
 
     def test_show_subdetector_with_invalid_condition(self):
         """
@@ -180,6 +194,15 @@ class TestApi(unittest.TestCase):
         """
         condition = API.show_subdetector_condition(SUBDETECTOR_1.name, 'invalid_condition')
         self.assertIsNone(condition)
+
+    def test_get_data_global_tag(self):
+        """
+        Retrieval of conditions based on a global tag
+        """
+        # We need to call get_snapshot first to create the global tag
+        a = API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        conditions_list = API.get_data_global_tag(GLOBAL_TAG_2.name)
+        self.assertEqual(len(conditions_list), 2)
 
     def test_add_subdetector(self):
         """
