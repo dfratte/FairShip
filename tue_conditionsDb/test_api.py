@@ -49,36 +49,32 @@ SUBDETECTOR_3 = Subdetector(name='subdetector_test_3')
 
 CONDITION_1 = Condition(
     name='condition_test_1',
-    iov=datetime.now(),
     since=datetime.now() - timedelta(days=1),
     until=datetime.now() + timedelta(days=1),
     tag='tag_test_1'
 )
 CONDITION_2 = Condition(
     name='condition_test_2',
-    iov=datetime.now(),
     since=datetime.now() - timedelta(days=1),
     until=datetime.now() + timedelta(days=1),
     tag='tag_test_2'
 )
 CONDITION_3 = Condition(
     name='condition_test_3',
-    iov=datetime.now(),
     since=datetime.now() - timedelta(days=2),
     until=datetime.now() - timedelta(days=1),
     tag='tag_test_3'
 )
 CONDITION_4 = Condition(
     name='condition_test_4',
-    iov=datetime.now(),
     since=datetime.now() - timedelta(days=2),
     until=datetime.now() - timedelta(days=1),
     tag='tag_test_4'
 )
-PARAMETER_1 = Parameter(name='parameter_test_1', iov=datetime.now(), value='parameter_value_test_1')
-PARAMETER_2 = Parameter(name='parameter_test_2', iov=datetime.now(), value='parameter_value_test_2')
-PARAMETER_3 = Parameter(name='parameter_test_3', iov=datetime.now(), value='parameter_value_test_3')
-PARAMETER_4 = Parameter(name='parameter_test_4', iov=datetime.now(), value='parameter_value_test_4')
+PARAMETER_1 = Parameter(name='parameter_test_1', value='parameter_value_test_1')
+PARAMETER_2 = Parameter(name='parameter_test_2', value='parameter_value_test_2')
+PARAMETER_3 = Parameter(name='parameter_test_3', value='parameter_value_test_3')
+PARAMETER_4 = Parameter(name='parameter_test_4', value='parameter_value_test_4')
 
 
 class TestApi(unittest.TestCase):

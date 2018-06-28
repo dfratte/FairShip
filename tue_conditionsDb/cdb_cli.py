@@ -6,8 +6,8 @@ import io
 import json
 
 from api import API
-from models import Condition
 from errors import errors
+from models import Condition
 
 HELP_DESC = '''
 
@@ -30,6 +30,7 @@ Generation 2017
 
 This script is used to retrieve condition data from a condition database.
 '''
+
 
 class CLI(object):
 
@@ -87,11 +88,11 @@ class CLI(object):
 
         flag_add_sub = len(add_sub_filter) != 0 and args.new_sub is not None
 
-        output_file_filter = [x for x in vars(args) if 
+        output_file_filter = [x for x in vars(args) if
                               (x != 'output_file' and vars(args)[x] is not None and vars(args)[x] is not False)]
-        
+
         flag_f = len(output_file_filter) == 0 and args.output_file is not None
-        
+
         if flag_ls or flag_cd or flag_add_sub or flag_f:
             return True
 
@@ -140,10 +141,10 @@ class CLI(object):
                                help='Gets a snapshot of Conditions based on a specific date.')
 
         group_ci.add_argument('-lg', '--list-global-tags',
-                               dest='list_global_tags',
-                               help='Lists all Global Tags from the Conditions database.',
-                               action="store_true")
-        
+                              dest='list_global_tags',
+                              help='Lists all Global Tags from the Conditions database.',
+                              action="store_true")
+
         group_ci.add_argument('-sc', '--show-condition',
                               dest='condition',
                               default=None,
@@ -183,20 +184,20 @@ class CLI(object):
             subdetectors_names = api.list_subdetectors()
             self.result = subdetectors_names
             self.is_list = True
-            
+
         if args.get_all_subdetectors is True:
             print "-gas executed"
             subdetectors = api.get_all_subdetectors()
             self.result = subdetectors
             self.is_list = True
-        
+
         if args.subdetector is not None and args.condition is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
             if subdetector is None:
-                self.error = "error "+errors.keys()[0]+": "+errors["0001"]
+                self.error = "error " + errors.keys()[0] + ": " + errors["0001"]
             self.result = subdetector
-        
+
         if args.new_sub is not None:
             print "-as executed"
             with open(args.new_sub) as loaded_file:
@@ -207,13 +208,13 @@ class CLI(object):
                     return True
                 print "Error adding new Subdetector"
                 return False
-        
+
         if args.get_snapshot is not None:
             print "-gs executed"
             snapshot = api.get_snapshot(args.get_snapshot, args.global_tag)
             self.result = snapshot
             self.is_list = True
-        
+
         if args.list_global_tags is True:
             print "-lg executed"
             global_tags_names = api.list_global_tags()
@@ -224,14 +225,14 @@ class CLI(object):
             print "-sc executed"
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
             if condition is None:
-                self.error = "error "+errors.keys()[1]+": "+errors["0002"]
+                self.error = "error " + errors.keys()[1] + ": " + errors["0002"]
             self.result = condition
 
         if args.global_tag is not None and args.get_snapshot is None:
             print "-gt executed"
             conditions_by_tag = api.get_data_global_tag(args.global_tag)
             self.result = conditions_by_tag
-            self.is_list = True      
+            self.is_list = True
 
         if args.tag is not None:
             print "-st executed"
@@ -239,12 +240,13 @@ class CLI(object):
             if not isinstance(condition, Condition):
                 self.is_list = True
             if condition is None:
-                self.error = "error "+errors.keys()[2]+": "+errors["0003"]
+                self.error = "error " + errors.keys()[2] + ": " + errors["0003"]
             self.result = condition
 
         self.produce_output(self.result, args, self.is_list)
 
         return self.result
+
 
 if __name__ == '__main__':
     service = CLI()

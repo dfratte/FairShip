@@ -2,11 +2,14 @@
 ConditionsDB API
 """
 from datetime import datetime
+
 from mongoengine import ComplexDateTimeField, FieldDoesNotExist
+
 from classes.db_connect import DbConnect
 from models import Subdetector, GlobalTag
 
-connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port':27017}
+connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port': 27017}
+
 
 class API(object):
     """
@@ -18,7 +21,7 @@ class API(object):
     DATETIME_FORMAT = '%Y,%m,%d,%H,%M,%S,%f'
 
     def __init__(self):
-        #TODO: pass a connection_dict as argument to connect remotely to another server
+        # TODO: pass a connection_dict as argument to connect remotely to another server
         DbConnect.get_connection(connection_dict)
 
     @staticmethod

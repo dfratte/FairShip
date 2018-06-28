@@ -17,8 +17,8 @@ class DbConnect(object):
         """
         connect(
             db=connection_dict['db_name'],
-#             user=user,
-#             password=password,
+            #             user=user,
+            #             password=password,
             host=connection_dict['host'],
             port=connection_dict['port']
         )
@@ -31,10 +31,10 @@ class DbConnect(object):
         """
         db_connect = connect(
             db=connection_dict['db_name'],
-#             user=user,
-#             password=password,
+            #             user=user,
+            #             password=password,
             host=connection_dict['host'],
             port=connection_dict['port']
         )
-        
+
         db_connect.drop_database(connection_dict['db_name'])

@@ -27,7 +27,8 @@ def tag_generator(subdetector_name, condition_name):
     """
     return subdetector_name + '_' + condition_name + '_' + str(datetime.datetime.now())
 
-connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port':27017}
+
+connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port': 27017}
 
 DbConnect.delete_db(connection_dict)
 DbConnect.get_connection(connection_dict)
