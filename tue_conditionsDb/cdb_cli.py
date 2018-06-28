@@ -118,7 +118,7 @@ class CLI(object):
 
         group_lsn.add_argument('-gas', '--get-all-subdetectors',
                                dest='get_all_subdetectors',
-                               help='Get all Subdetectors from the Conditions database.',
+                               help='Gets all Subdetectors from the Conditions database.',
                                action="store_true")
 
         group_lsn.add_argument('-ss', '--show-subdetector',
@@ -190,60 +190,19 @@ class CLI(object):
             self.result = subdetectors_names
             self.is_list = True
             
-        if args.list_global_tags is True:
-            print "-lg executed"
-            global_tags_names = api.list_global_tags()
-            self.result = global_tags_names
-            self.is_list = True
-
         if args.get_all_subdetectors is True:
             print "-gas executed"
             subdetectors = api.get_all_subdetectors()
             self.result = subdetectors
             self.is_list = True
-
-        if args.get_snapshot is not None:
-            print "-gs executed"
-            snapshot = api.get_snapshot(args.get_snapshot, args.global_tag)
-            self.result = snapshot
-            self.is_list = True
-            
-        if args.global_tag is not None and args.get_snapshot is None:
-            print "-gt executed"
-            conditions_by_tag = api.get_data_global_tag(args.global_tag)
-            self.result = conditions_by_tag
-            self.is_list = True
-
+        
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
             print "-ss executed"
             subdetector = api.show_subdetector(args.subdetector)
             if subdetector is None:
                 self.error = "error "+errors.keys()[0]+": "+errors["0001"]
             self.result = subdetector
-
-        if args.subdetector is not None and args.condition is not None and args.iov is None:
-            print "-sc executed"
-            condition = api.show_subdetector_condition(args.subdetector, args.condition)
-            if condition is None:
-                self.error = "error "+errors.keys()[1]+": "+errors["0002"]
-            self.result = condition
-
-        if args.tag is not None:
-            print "-st executed"
-            condition = api.show_subdetector_tag(args.subdetector, args.tag)
-            if not isinstance(condition, Condition):
-                self.is_list = True
-            if condition is None:
-                self.error = "error "+errors.keys()[2]+": "+errors["0003"]
-            self.result = condition
-
-        if args.subdetector is not None and args.iov is not None:
-            print "-si executed"
-            iov = api.show_subdetector_iov(args.subdetector, args.iov)
-            if isinstance(iov, list):
-                self.is_list = True
-            self.result = iov
-
+        
         if args.new_sub is not None:
             print "-as executed"
             with open(args.new_sub) as loaded_file:
@@ -254,11 +213,51 @@ class CLI(object):
                     return True
                 print "Error adding new Subdetector"
                 return False
+        
+        if args.get_snapshot is not None:
+            print "-gs executed"
+            snapshot = api.get_snapshot(args.get_snapshot, args.global_tag)
+            self.result = snapshot
+            self.is_list = True
+        
+        if args.list_global_tags is True:
+            print "-lg executed"
+            global_tags_names = api.list_global_tags()
+            self.result = global_tags_names
+            self.is_list = True
+
+        if args.subdetector is not None and args.condition is not None and args.iov is None:
+            print "-sc executed"
+            condition = api.show_subdetector_condition(args.subdetector, args.condition)
+            if condition is None:
+                self.error = "error "+errors.keys()[1]+": "+errors["0002"]
+            self.result = condition
+
+        if args.subdetector is not None and args.iov is not None:
+            print "-si executed"
+            iov = api.show_subdetector_iov(args.subdetector, args.iov)
+            if isinstance(iov, list):
+                self.is_list = True
+            self.result = iov
+
+        if args.global_tag is not None and args.get_snapshot is None:
+            print "-gt executed"
+            conditions_by_tag = api.get_data_global_tag(args.global_tag)
+            self.result = conditions_by_tag
+            self.is_list = True      
+
+        if args.tag is not None:
+            print "-st executed"
+            condition = api.show_subdetector_tag(args.subdetector, args.tag)
+            if not isinstance(condition, Condition):
+                self.is_list = True
+            if condition is None:
+                self.error = "error "+errors.keys()[2]+": "+errors["0003"]
+            self.result = condition
 
         self.produce_output(self.result, args, self.is_list)
 
         return self.result
-
 
 if __name__ == '__main__':
     service = CLI()
