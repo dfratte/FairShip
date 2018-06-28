@@ -30,6 +30,7 @@ GLOBAL_TAG_2 = GlobalTag(name='GlobalTag_test_2')
 
 SUBDETECTOR_1 = Subdetector(name='subdetector_test_1')
 SUBDETECTOR_2 = Subdetector(name='subdetector_test_2')
+SUBDETECTOR_3 = Subdetector(name='subdetector_test_3')
 
 CONDITION_1 = Condition(
     name='condition_test_1',
@@ -52,11 +53,17 @@ CONDITION_3 = Condition(
     until=datetime.now() - timedelta(days=1),
     tag='tag_test_3'
 )
+CONDITION_4 = Condition(
+    name='condition_test_4',
+    iov=datetime.now(),
+    since=datetime.now() - timedelta(days=2),
+    until=datetime.now() - timedelta(days=1),
+    tag='tag_test_4'
+)
 PARAMETER_1 = Parameter(name='parameter_test_1', iov=datetime.now(), value='parameter_value_test_1')
 PARAMETER_2 = Parameter(name='parameter_test_2', iov=datetime.now(), value='parameter_value_test_2')
 PARAMETER_3 = Parameter(name='parameter_test_3', iov=datetime.now(), value='parameter_value_test_3')
-
-SUBDETECTOR_3 = Subdetector()
+PARAMETER_4 = Parameter(name='parameter_test_4', iov=datetime.now(), value='parameter_value_test_4')
 
 
 class TestApi(unittest.TestCase):
@@ -76,7 +83,9 @@ class TestApi(unittest.TestCase):
         SUBDETECTOR_1.conditions.append(CONDITION_1)
         SUBDETECTOR_1.conditions.append(CONDITION_2)
         SUBDETECTOR_1.conditions.append(CONDITION_3)
-        SUBDETECTOR_3 = SUBDETECTOR_1
+        CONDITION_4.parameters.append(PARAMETER_4)
+        SUBDETECTOR_3.conditions.append(CONDITION_4)
+        # SUBDETECTOR_3 = SUBDETECTOR_1
         SUBDETECTOR_1.save()
         SUBDETECTOR_2.save()
         GLOBAL_TAG_1.save()
@@ -88,6 +97,7 @@ class TestApi(unittest.TestCase):
         SUBDETECTOR_2.delete()
         GLOBAL_TAG_1.delete()
         GlobalTag.objects(name=GLOBAL_TAG_2.name).delete()
+        Subdetector.objects(name=SUBDETECTOR_3.name).delete()
 
     def test_list_subdetectors(self):
         """
@@ -176,8 +186,8 @@ class TestApi(unittest.TestCase):
         self.assertEqual(conditions_list, [])
         # Test the functionality of the insertion of a global tag into the database.
         # This test is placed here because this functionality is covered by get_snapshot.
-        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
-        self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_2.name).count(), 1)
+        # API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        # self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_2.name).count(), 1)
         API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_1.name)
         self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_1.name).count(), 1)
 
