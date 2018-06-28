@@ -61,7 +61,7 @@ class API(object):
         function show_subdetector_conditions() fetches only the conditions
         related to the subdetector name, which User has requested for
 
-        python [file_name] -ss [subdetector_name]
+        python [file_name] -ss "subdetector_name"
         """
         return API.show_subdetector(searched_name).conditions
 
@@ -71,7 +71,7 @@ class API(object):
         function show_subdetector_condition() fetches all the data i.e. name, conditions, etc
         related to the subdetector name and conditions name, which User has requested for
 
-        python [file_name] -ss [subdetector_name] -sc [condition_name]
+        python [file_name] -ss "subdetector_name" -sc "condition_name"
         """
         return API.show_subdetector_conditions(searched_name).filter(name=searched_condition).first()
 
@@ -81,7 +81,7 @@ class API(object):
         function show_subdetector_tag() fetches all the conditions that has a tag
         mentioned as an input by the user.
 
-        python [file_name] -ss [subdetector_name] -st [tag_name]
+        python [file_name] -ss "subdetector_name" -st "tag_name"
         """
         if subdetector_name is not None and searched_tag is not None:
             return API.show_subdetector_conditions(subdetector_name).filter(tag=searched_tag).first()
@@ -101,8 +101,8 @@ class API(object):
         mentioned as an input by the user. OR a user can also look between the range of
         IOVs with two datetime's seperated by '-'
 
-        python [file_name] -ss [subdetector_name] -si [iov]
-        python [file_name] -ss [subdetector_name] -si [iov-iov]
+        python [file_name] -ss "subdetector_name" -si "datetime"
+        python [file_name] -ss "subdetector_name" -si "datetime_from-datetime_to"
         """
         conditions = API.show_subdetector_conditions(searched_name)
 
@@ -182,7 +182,7 @@ class API(object):
         """
         function add_subdetector() adds a new subdetector or a json file mentioned by the user
 
-        python [file_name] -as [subdetector_name]
+        python [file_name] -as "subdetector_name"
         """
         try:
             Subdetector(**new_subdetector).save()
