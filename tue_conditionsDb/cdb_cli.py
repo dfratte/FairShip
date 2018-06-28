@@ -8,6 +8,7 @@ from datetime import datetime
 
 from api import API
 from models import Condition
+from errors import errors
 
 HELP_DESC = '''
 
@@ -30,12 +31,13 @@ Generation 2017
 
 This script is used to retrieve condition data from a condition database.
 '''
-
+ 
 class Service(object):
 
     def __init__(self):
         self.result = None
         self.is_list = False
+        self.error = None
 
     @staticmethod
     def save(file_name, data, mode):
@@ -49,22 +51,23 @@ class Service(object):
         print json.dumps(parsed, indent=4, sort_keys=True)
 
     def produce_output(self, data, args, is_list):
-        if is_list:
-            for idx, s in enumerate(data):
-                if args.list_subdetectors:
-                    print idx + 1, "-", s
-                elif args.get_snapshot:
-                    print s["until"]
-                else:
-                    Service.output(s)
+        if self.error is not None:
+            print self.error
         else:
-            Service.output(data)
-            
-        if args.output_file:
-            if self.is_list:
-                print "Unsupported data export."
+            if is_list:
+                for idx, s in enumerate(data):
+                    if args.list_subdetectors:
+                        print idx + 1, "-", s
+                    else:
+                        Service.output(s)
             else:
-                Service.save(args.output_file, data.to_json(), 'w')
+                Service.output(data)
+
+            if args.output_file:
+                if self.is_list:
+                    print "Unsupported data export."
+                else:
+                    Service.save(args.output_file, data.to_json(), 'w')
 
     @staticmethod
     def validate_arguments(args):
@@ -192,17 +195,23 @@ class Service(object):
             self.is_list = True
 
         if args.subdetector is not None and args.condition is None and args.iov is None and args.tag is None:
-            subdetector = api.show_subdetector(args.subdetector)            
+            subdetector = api.show_subdetector(args.subdetector)
+            if subdetector is None:
+                self.error = "error "+errors.keys()[0]+": "+errors["0001"]
             self.result = subdetector
 
         if args.subdetector is not None and args.condition is not None and args.iov is None:
             condition = api.show_subdetector_condition(args.subdetector, args.condition)
+            if condition is None:
+                self.error = "error "+errors.keys()[1]+": "+errors["0002"]
             self.result = condition
 
         if args.tag is not None:
             condition = api.show_subdetector_tag(args.subdetector, args.tag)
             if not isinstance(condition, Condition):
                 self.is_list = True
+            if condition is None:
+                self.error = "error "+errors.keys()[2]+": "+errors["0003"]
             self.result = condition
 
         if args.subdetector is not None and args.iov is not None:
