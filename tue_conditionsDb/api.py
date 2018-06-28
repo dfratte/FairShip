@@ -1,4 +1,4 @@
-"""@package tue_conditionsDb
+"""@package mongoDb
 ConditionsDB API
 """
 from datetime import datetime
