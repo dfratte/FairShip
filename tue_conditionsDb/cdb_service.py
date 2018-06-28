@@ -53,6 +53,8 @@ class Service(object):
             for idx, s in enumerate(data):
                 if args.list_subdetectors:
                     print idx + 1, "-", s
+                elif args.get_snapshot:
+                    print s["until"]
                 else:
                     Service.output(s)
         else:
@@ -144,6 +146,12 @@ class Service(object):
                               default=None,
                               required=False,
                               help='Retrieves a list of Conditions based on a specific IOV or IOV range.')
+        
+        group_ci.add_argument('-gt', '--global-tag',
+                              dest='global_tag',
+                              default=None,
+                              required=False,
+                              help='Creates a new global tag based on the retrieved snapshot.')
 
         group_ci.add_argument('-st', '--show-tag',
                               dest='tag',
@@ -178,8 +186,8 @@ class Service(object):
             self.is_list = True
         
         if args.get_snapshot is not None:
-            iov, tag_name = args.get_snapshot.split(" ")
-            snapshot = api.get_snapshot(iov, tag_name)
+#             iov, tag_name = args.get_snapshot.split(" ")
+            snapshot = api.get_snapshot(args.get_snapshot, args.global_tag)
             self.result = snapshot
             self.is_list = True
 
