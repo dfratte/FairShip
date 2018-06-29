@@ -33,6 +33,9 @@ This script is used to retrieve condition data from a condition database.
 
 
 class CLI(object):
+    """
+    Class that implements the Command Line Interface to the tue_conditionsDb
+    """
 
     def __init__(self):
         self.result = None
@@ -41,16 +44,32 @@ class CLI(object):
 
     @staticmethod
     def save(file_name, data, mode):
+        """
+        Save the output of the command in a file locally
+        :param file_name: name of the output file
+        :param data: data, in json format, to be saved into the output file
+        :param mode: string that specifies in which mode the file is opened : e.g. 'w', 'a'
+        """
         with io.open(file_name, mode, encoding='utf-8') as f:
             f.write(unicode(data))
             print "Data exported successfully!"
 
     @staticmethod
     def output(data):
+        """
+        Method used to convert the data to json and print it
+        :param data: data to be converted and printed
+        """
         parsed = json.loads(data.to_json())
         print json.dumps(parsed, indent=4, sort_keys=True)
 
     def produce_output(self, data, args, is_list):
+        """
+        Method that checks the args dictionary and based on it, calls the save or output functions.
+        :param data: data to be saved or printed
+        :param args: arguments given as input through the CLI
+        :param is_list: boolean that is used to indicate if the data to be saved is a list
+        """
         if self.error is not None:
             print self.error
         else:
@@ -73,6 +92,11 @@ class CLI(object):
 
     @staticmethod
     def validate_arguments(args):
+        """
+        Method used as an extra validation step for the inputted arguments.
+        :param args: arguments given as input through the CLI
+        :return: True if the arguments are correct, False otherwise
+        """
 
         list_sd_filter = [x for x in vars(args) if (x != 'list_subdetectors' and vars(args)[x] is not None)]
 
@@ -99,6 +123,16 @@ class CLI(object):
         return False
 
     def run(self, *params):
+        """
+        Main function of the CLI which receives arguments from the terminal (or from the tests), validates them, and
+        then calls the corresponding API method to contact the db and receive the result. If the correct arguments are
+        given, the result can be outputted as a file or through the terminal.
+
+        :param params: Parameters given to the function. Used for automated unittests, where there is no input from the
+        terminal, so arguments are passed to this variable.
+        :return: The result that is produced when executing the corresponding commands. The result is one of the python
+        objects (or a list of objects) defined in the models.py, which correspond to database entities.
+        """
 
         api = API()
 
@@ -169,6 +203,7 @@ class CLI(object):
                             required=False,
                             help='Redirects the output of a command to a JSON file.')
 
+        # Tweak used to test the CLI through unittests, without requesting input from the terminal.
         if params:
             args = parser.parse_args(params)
         else:
