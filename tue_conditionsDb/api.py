@@ -1,4 +1,4 @@
-"""@package mongoDb
+"""@package tue_conditionsDb
 ConditionsDB API
 """
 from datetime import datetime
@@ -17,7 +17,7 @@ class API(object):
     """
     ##
     # @var DATETIME_FORMAT
-    # Masked used to format datetime
+    # Mask used to format datetime
     DATETIME_FORMAT = '%Y,%m,%d,%H,%M,%S,%f'
 
     def __init__(self):

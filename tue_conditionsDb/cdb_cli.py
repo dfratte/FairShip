@@ -1,4 +1,4 @@
-"""@package mongoDb
+"""@package tue_conditionsDb
 ConditionsDB Command Line Interface
 """
 import argparse

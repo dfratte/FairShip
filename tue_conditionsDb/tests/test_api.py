@@ -1,4 +1,4 @@
-"""@package docstring
+"""@package tue_conditionsDb
 Unittest developed to guarantee the api integrity
 """
 import json
@@ -193,12 +193,12 @@ class TestApi(unittest.TestCase):
         self.assertEqual(conditions_list, [])
         # Test the functionality of the insertion of a global tag into the database.
         # This test is placed here because this functionality is covered by get_snapshot.
-        # API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
-        # self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_2.name).count(), 1)
+        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_2.name).count(), 1)
         API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_1.name)
         self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_1.name).count(), 1)
 
-    def list_global_tags(self):
+    def test_list_global_tags(self):
         """
         Retrieval of all global tags.
         """
