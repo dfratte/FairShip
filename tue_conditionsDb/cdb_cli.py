@@ -201,7 +201,8 @@ class CLI(object):
                             dest='output_file',
                             default=None,
                             required=False,
-                            help='Redirects the output of a command to a JSON file.')
+                            help='Redirects the output of a command to a JSON file. This command must have a return \
+                            value and not only print data to the standard output')
 
         # Tweak used to test the CLI through unittests, without requesting input from the terminal.
         if params:
