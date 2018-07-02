@@ -185,17 +185,17 @@ class TestApi(unittest.TestCase):
 
         This function also tests the ability of get_snapshot to add global tags into the database.
         """
-        conditions_list = API.get_snapshot(API.convert_date(datetime.now()), None)
+        conditions_list = API.get_snapshot(API.convert_date(datetime.now())+"--", None)
         self.assertEqual(len(conditions_list), 2)
-        conditions_list = API.get_snapshot(API.convert_date(datetime.now() + timedelta(weeks=5)), None)
+        conditions_list = API.get_snapshot(API.convert_date(datetime.now() + timedelta(weeks=5))+"--", None)
         self.assertEqual(len(conditions_list), 0)
-        conditions_list = API.get_snapshot('', None)
+        conditions_list = API.get_snapshot('--', None)
         self.assertEqual(conditions_list, [])
         # Test the functionality of the insertion of a global tag into the database.
         # This test is placed here because this functionality is covered by get_snapshot.
-        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        API.get_snapshot(API.convert_date(datetime.now())+"--", GLOBAL_TAG_2.name)
         self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_2.name).count(), 1)
-        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_1.name)
+        API.get_snapshot(API.convert_date(datetime.now())+"--", GLOBAL_TAG_1.name)
         self.assertEqual(API.list_global_tags().filter(name=GLOBAL_TAG_1.name).count(), 1)
 
     def test_list_global_tags(self):
@@ -217,7 +217,7 @@ class TestApi(unittest.TestCase):
         Retrieval of conditions based on a global tag
         """
         # We need to call get_snapshot first to create the global tag
-        API.get_snapshot(API.convert_date(datetime.now()), GLOBAL_TAG_2.name)
+        API.get_snapshot(API.convert_date(datetime.now())+"--", GLOBAL_TAG_2.name)
         conditions_list = API.get_data_global_tag(GLOBAL_TAG_2.name)
         self.assertEqual(len(conditions_list), 2)
 
