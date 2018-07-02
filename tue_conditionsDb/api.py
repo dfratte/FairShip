@@ -103,6 +103,7 @@ class API(object):
                     return c
         return None
 
+
     @staticmethod
     def get_snapshot(searched_date_string, gt_name):
         """
@@ -111,6 +112,9 @@ class API(object):
 
         python [file_name] -gs "searched_date_string" [-gt "global_tag_name"]
         """
+
+        searched_date_string, subdetector_name, condition_name = searched_date_string.split("-")
+
         found_snapshot = []
         if searched_date_string in (None, ''):
             return found_snapshot
@@ -119,15 +123,20 @@ class API(object):
             if not GlobalTag.objects(name=gt_name):
                 GlobalTag(name=gt_name).save()
 
-        for s in API.get_all_subdetectors():
+        if condition_name == "":
+            condition_name = "ALL"
+
+        for s in API.get_all_subdetectors() if subdetector_name == "" else Subdetector.objects(name=subdetector_name):
+
             for c in s.conditions:
+
                 since_date = API.convert_date(c["since"])
                 until_date = API.convert_date(c["until"])
                 formatted_since_date = datetime.strptime(since_date, API.DATETIME_FORMAT)
                 formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
                 formatted_searched_date = API.convert_date(searched_date_string)
 
-                if formatted_since_date <= formatted_searched_date <= formatted_until_date:
+                if formatted_since_date <= formatted_searched_date <= formatted_until_date and bool(c["name"] == condition_name) ^ bool(condition_name is "ALL"):
 
                     found_snapshot.append(c)
 
@@ -136,7 +145,7 @@ class API(object):
                         if prev_gt == "":
                             c.global_tag = gt_name + ","
                         else:
-                            c.global_tag = prev_gt + "," + gt_name
+                            c.global_tag = prev_gt + gt_name + ","
 
                         if gt_name + ',' not in prev_gt:
                             c.save()
