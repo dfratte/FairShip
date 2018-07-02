@@ -77,8 +77,6 @@ class CLI(object):
                 for idx, s in enumerate(data):
                     if args.list_subdetectors or args.list_global_tags:
                         print idx + 1, "-", s
-                    elif args.get_snapshot:
-                        print s["until"]
                     else:
                         CLI.output(s)
             else:
