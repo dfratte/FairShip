@@ -1,0 +1,58 @@
+diff --git a/macro/ShipReco.py b/macro/ShipReco.py
+index 36867b3..485fd21 100644
+--- a/macro/ShipReco.py
++++ b/macro/ShipReco.py
+@@ -35,14 +35,27 @@ import shipRoot_conf
+ 
+ shipRoot_conf.configure()
+ 
++# The following lines are used to import from a parent directory
++import inspect
++current_dir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
++parent_dir = os.path.dirname(current_dir)
++sys.path.insert(0, parent_dir)
++
++
++from tue_conditionsDb import api
++
++# Create an instance of our ConditionsDB API
++conditionsDB_API = api.API()
++
++
+ try:
+-        opts, args = getopt.getopt(sys.argv[1:], "o:D:FHPu:n:f:g:c:hqv:sl:A:Y:i:",\
+-           ["ecalDebugDraw","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0"])
++        opts, args = getopt.getopt(sys.argv[1:], "o:D:FHPu:n:f:g:c:hqv:sl:A:Y:i:t:",\
++           ["ecalDebugDraw","globalTag=","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0"])
+ except getopt.GetoptError:
+         # print help information and exit:
+         print ' enter --inputFile=  --geoFile= --nEvents=  --firstEvent=,'
+         print ' noStrawSmearing: no smearing of distance to wire, default on'
+-        print ' outputfile will have same name with _rec added'  
++        print ' outputfile will have same name with _rec added'
+         print ' --realPR= defines track pattern recognition. Possible options: ',realPROptions, "if no option given, fake PR is used."
+         sys.exit()
+ for o, a in opts:
+@@ -52,6 +65,22 @@ for o, a in opts:
+             withNoStrawSmearing = True
+         if o in ("--withT0",):
+             withT0 = True
++        if o in ("-t", "--globalTag=", ):
++            globalTag = a
++            print globalTag
++            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
++            sd = conditionsDB_API.show_subdetector(globalTag)
++            print sd.to_json()
++            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
++            for i in sd.conditions:
++                print i.name
++            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
++            print 'Condition: ' + sd.conditions[0].name
++            print 'Parameters: '
++            for i in sd.conditions[0].parameters:
++                print "Name: " + i.name + " --> Value: " + i.value
++            print sd.conditions[0].parameters[0].name + "   " + sd.conditions[0].parameters[0].value
++            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
+         if o in ("-f", "--inputFile",):
+             inputFile = a
+         if o in ("-g", "--geoFile",):
