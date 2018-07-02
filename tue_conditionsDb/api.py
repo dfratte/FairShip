@@ -103,7 +103,6 @@ class API(object):
                     return c
         return None
 
-
     @staticmethod
     def get_snapshot(searched_date_string, gt_name):
         """
@@ -136,7 +135,8 @@ class API(object):
                 formatted_until_date = datetime.strptime(until_date, API.DATETIME_FORMAT)
                 formatted_searched_date = API.convert_date(searched_date_string)
 
-                if formatted_since_date <= formatted_searched_date <= formatted_until_date and bool(c["name"] == condition_name) ^ bool(condition_name is "ALL"):
+                if formatted_since_date <= formatted_searched_date <= formatted_until_date and (
+                        (c["name"] == condition_name) ^ (condition_name == "ALL")):
 
                     found_snapshot.append(c)
 
