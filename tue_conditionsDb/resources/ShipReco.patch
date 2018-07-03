@@ -1,10 +1,10 @@
 diff --git a/macro/ShipReco.py b/macro/ShipReco.py
-index 36867b3..6a506ad 100644
+index 36867b3..e18c963 100644
 --- a/macro/ShipReco.py
 +++ b/macro/ShipReco.py
-@@ -33,11 +33,24 @@ import rootUtils as ut
- import shipunit as u
- import shipRoot_conf
+@@ -35,9 +35,22 @@ import shipRoot_conf
+ 
+ shipRoot_conf.configure()
  
 +
 +# The following lines are used to import from a parent directory
@@ -19,24 +19,26 @@ index 36867b3..6a506ad 100644
 +# Create an instance of our ConditionsDB API
 +conditionsDB_API = api.API()
 +
- shipRoot_conf.configure()
- 
  try:
 -        opts, args = getopt.getopt(sys.argv[1:], "o:D:FHPu:n:f:g:c:hqv:sl:A:Y:i:",\
 -           ["ecalDebugDraw","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0"])
 +        opts, args = getopt.getopt(sys.argv[1:], "o:D:FHPu:n:f:g:c:hqv:sl:A:Y:i:t:",\
-+           ["ecalDebugDraw","globalTag=","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0"])
++           ["ecalDebugDraw","inputFile=","geoFile=","nEvents=","noStrawSmearing","noVertexing","saveDisk","realPR=","withT0","globalTag="])
  except getopt.GetoptError:
          # print help information and exit:
          print ' enter --inputFile=  --geoFile= --nEvents=  --firstEvent=,'
-@@ -52,6 +65,11 @@ for o, a in opts:
+@@ -52,6 +65,15 @@ for o, a in opts:
              withNoStrawSmearing = True
          if o in ("--withT0",):
              withT0 = True
 +        if o in ("-t", "--globalTag=", ):
 +            globalTag = a
++            print globalTag
 +            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
-+            print conditionsDB_API.show_subdetector("Target Tracker").to_json()
++            conditions = conditionsDB_API.get_data_global_tag(globalTag)
++            print conditions
++            for i in conditions:
++                print i.name
 +            print '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
          if o in ("-f", "--inputFile",):
              inputFile = a
