@@ -2,22 +2,17 @@
 ConditionsDB API
 """
 from datetime import datetime
-
 from mongoengine import ComplexDateTimeField, FieldDoesNotExist
-
 from classes.db_connect import DbConnect
 from models import Subdetector, GlobalTag
 
 connection_dict = {'db_name': 'conditionsDB', 'user': None, 'password': None, 'host': "localhost", 'port': 27017}
 
-
 class API(object):
     """
-    TODO: Document it
+    Class that implements the API that interacts with the tue_conditionsDb
     """
-    ##
-    # @var DATETIME_FORMAT
-    # Mask used to format datetime
+
     DATETIME_FORMAT = '%Y,%m,%d,%H,%M,%S,%f'
 
     def __init__(self):
@@ -27,7 +22,8 @@ class API(object):
     @staticmethod
     def convert_date(date):
         """
-        TODO: Document it
+        function convert_date(date) returns a date object if a string is passed, and viceversa.
+        :param date: date represented as a string or as date object
         """
         if isinstance(date, datetime):
             return ComplexDateTimeField()._convert_from_datetime(date)

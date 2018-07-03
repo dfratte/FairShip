@@ -26,7 +26,7 @@ class DbConnect(object):
     @staticmethod
     def delete_db(connection_dict):
         """
-        Dalete the database of which name is provided.
+        Delete the database of which name is provided.
         :param connection_dict: Dict containinig all the information to make a connection.
         """
         db_connect = connect(
