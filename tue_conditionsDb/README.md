@@ -4,7 +4,11 @@ At CERN, the European Organization for Nuclear Research, physicists and engineer
 
 The instruments used at CERN are purpose-built particle accelerators and detectors. Accelerators boost beams of particles to high energies before the beams are made to collide with each other or with stationary targets. Detectors observe and record the results of these collisions. The SHiP experiment at a proposed new beam dump facility at the SPS will search for hidden particles as predicted by a very large number of recently elaborated models of the Hidden Sectors. These models are capable of accommodating dark matter, neutrino oscillations, and the origin of the full baryon asymmetry in the Universe. Specifically, the experiment is aimed at searching for very weakly interacting long-lived particles including Heavy Neutral Leptons - right-handed partners of the active neutrinos, vector, scalar, axion portals to the Hidden Sector, and light supersymmetric particles - sgoldstinos, etc.
 
+The Professional Doctorate in Engineering (PDEng) degree program in Software Technology is provided by the Department of Mathematics and Computer Science of Eindhoven University of Technology in the context of the 4TU.School for Technological Design, Stan Ackermans Institute. It is an accredited and challenging two-year, Bologna Third-cycle (doctorate-level equivalent to EQF level 8) engineering degree program during which its trainees focus on strengthening their technical and non-technical competencies related to the effective and efficient design and development of software for resource-constrained software-intensive systems, such as real-time embedded or distributed systems, in an industrial setting. In particular we focus on large-scale project-based design and development of this kind of software.
+
 In this project, the PDEng trainees are designing and implement a conditions database within the SHiP software framework. The conditions database will contain detector parameters that are necessary for the reconstruction of events and an interval of validity. After a comparative study of existing solutions in use by other experiments and collecting the user requirements from the SHiP sub detector experts, a prototype will be delivered using the most appropriate technology.
+
+[More information about TU/e ST PDEng Program](https://www.tue.nl/en/education/tue-graduate-school/pdeng-programs/pdeng-programs-overview/pdeng-software-technology-st/)
 
 # User Manual
 
@@ -164,7 +168,7 @@ TU/e PDEng Software Technology team:
 | Ani Megerdoumian              | Project Manager                | a.megerdoumian@tue.nl         |
 | Pranav Bhatnagar              | Team Leader                    | p.bhatnagar@tue.nl            |
 | Beza G. Tassew                | Architect                      | b.g.tassew@tue.nl             |
-| Daniel Fratte                 | Architect                      | d.fratte@tue.nl               | 
+| Daniel Fratte                 | Architect                      | danielrfratte@gmail.com       | 
 | Dimas Satria                  | Lead Designer/Test Manager     | d.satria@tue.nl               |
 | Giovanni de Almeida Calheiros | Designer/Quality Manager       | g.de.almeida.calheiros@tue.nl |
 | Konstantinos Karmas           | Designer/Configuration Manager | k.karmas@tue.nl               |
