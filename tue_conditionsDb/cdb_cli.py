@@ -83,10 +83,17 @@ class CLI(object):
                 CLI.output(data)
 
             if args.output_file:
-                if self.is_list:
-                    print "Unsupported data export."
+                if args.get_snapshot or args.global_tag:
+                    parsed = "["
+                    for idx, x in enumerate(data):
+                        parsed += json.dumps(json.loads(x.to_json()), indent=4, sort_keys=True)
+                        if idx < (len(data) - 1):
+                            parsed += ","
+                    parsed += "]"
+                    CLI.save(args.output_file, parsed, 'w')
                 else:
-                    CLI.save(args.output_file, data.to_json(), 'w')
+                    final_data = json.dumps(json.loads(data.to_json()), indent=4, sort_keys=True)
+                    CLI.save(args.output_file, final_data, 'w')
 
     @staticmethod
     def validate_arguments(args):
@@ -187,7 +194,7 @@ class CLI(object):
                               dest='global_tag',
                               default=None,
                               required=False,
-                              help='Creates a new global tag based on the retrieved snapshot.')
+                              help='Creates a new global tag based on the retrieved snapshot. If used alone retrieves all conditions globally tagged under the passed argument.')
 
         group_ci.add_argument('-st', '--show-tag',
                               dest='tag',
