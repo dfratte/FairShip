@@ -1,6 +1,10 @@
 # TU/e ConditionsDB for FairShip
 
-The SHiP Experiment is a new general-purpose beam dump facility at the SPS to search for hidden particles as predicted by a very large number of recently elaborated models of Hidden Sectors which are capable of accommodating dark matter, neutrino oscillations, and the origin of the full baryon asymmetry in the Universe. Specifically, the experiment is aimed at searching for very weakly interacting long lived particles including Heavy Neutral Leptons - right-handed partners of the active neutrinos, vector, scalar, axion portals to the Hidden Sector, and light supersymmetric particles - sgoldstinos, etc.The high intensity of the SPS and in particular the large production of charm mesons and photons with the 400 GeV beam allow accessing a wide variety of light long-lived exotic particles of such models and of SUSY. Moreover, the facility is ideally suited to study the interactions of tau neutrinos.
+At CERN, the European Organization for Nuclear Research, physicists and engineers are probing the fundamental structure of the universe. They use the world's largest and most complex scientific instruments to study the basic constituents of matter – the fundamental particles. The particles are made to collide together at close to the speed of light. The process gives the physicists clues about how the particles interact and provides insights into the fundamental laws of nature.
+
+The instruments used at CERN are purpose-built particle accelerators and detectors. Accelerators boost beams of particles to high energies before the beams are made to collide with each other or with stationary targets. Detectors observe and record the results of these collisions. The SHiP experiment at a proposed new beam dump facility at the SPS will search for hidden particles as predicted by a very large number of recently elaborated models of the Hidden Sectors. These models are capable of accommodating dark matter, neutrino oscillations, and the origin of the full baryon asymmetry in the Universe. Specifically, the experiment is aimed at searching for very weakly interacting long-lived particles including Heavy Neutral Leptons - right-handed partners of the active neutrinos, vector, scalar, axion portals to the Hidden Sector, and light supersymmetric particles - sgoldstinos, etc.
+
+In this project, the PDEng trainees are designing and implement a conditions database within the SHiP software framework. The conditions database will contain detector parameters that are necessary for the reconstruction of events and an interval of validity. After a comparative study of existing solutions in use by other experiments and collecting the user requirements from the SHiP sub detector experts, a prototype will be delivered using the most appropriate technology.
 
 # User Manual
 
@@ -22,8 +26,7 @@ Run the following commands in a terminal to prepare the environment:
   $ . ./venv/bin/activate
   $ pip install -r resources/requirements.txt
   ```
-  
-  If you need to fill the database with dummy data, use the following
+  Database can be filled with dummy data, by running the following command
   ```bash
   $ python fill_data.py
   ```
@@ -122,7 +125,7 @@ $ git apply tue_conditions/resources/ShipReco.patch
 ```
 
 ## 4. Running tests with coverage tool
-Coverage tool is used to provide insight on the percentage of code covered by unittests.
+Coverage tool is used to provide insight into the percentage of code covered by unittests.
 
 The following command should be run inside tue_conditionsDb folder:
 ```bash
@@ -131,7 +134,7 @@ $ coverage run -m unittest tests.test_cdb_cli tests.test_api && coverage report 
 **Note:** Coverage is included inside the resources/requirements.txt
 
 ## 5. Running Pylint
-Pylint tool is used to make sure that PEP-8 python coding standards are enforced. It provides warnings and a score as a metric (maximum 10.0).
+The pylint tool is used to make sure that PEP-8 python coding standards are enforced. It provides warnings and a score as a metric (maximum 10.0).
 
 The following command should be run inside tue_conditionsDb folder:
 ```bash
@@ -154,7 +157,7 @@ $ sudo apt-get install doxygen
 --------
 
 # References
-TU/e PDEng team:
+TU/e PDEng Software Technology team:
 
 |            Member             |              Role              |             Email             |
 |-------------------------------|:------------------------------:|------------------------------:|
@@ -165,5 +168,3 @@ TU/e PDEng team:
 | Dimas Satria                  | Lead Designer/Test Manager     | d.satria@tue.nl               |
 | Giovanni de Almeida Calheiros | Designer/Quality Manager       | g.de.almeida.calheiros@tue.nl |
 | Konstantinos Karmas           | Designer/Configuration Manager | k.karmas@tue.nl               |
-
-_**Repository:**_ https://github.com/dfratte/FairShip.git
